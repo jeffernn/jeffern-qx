@@ -1741,3 +1741,6 @@ HOST-SUFFIX,hivedata.cc
 HOST-SUFFIX,navi.gd.chinamobile.com
 #微信小程序广告屏蔽
 host-suffix,extshort.weixin.qq.com
+#禁止goodnotes6认证系统联网
+host-suffix, isi.csan.goodnotes.com.cn
+host-suffix, isi.csan.goodnotes.com 
