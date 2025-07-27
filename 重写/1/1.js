@@ -24,7 +24,7 @@ const myHeaders = {
 // 新增的/user/money路径处理
 if (url.indexOf('/user/money') != -1) {
     obj = {
-        "money": "1.00",
+        "money": "200.00",
         "ret": 1
     };
 } else if (url.indexOf('/admin/service/registration/validateDevice') != -1) {
