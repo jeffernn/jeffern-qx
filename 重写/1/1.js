@@ -21,4 +21,15 @@ if (url.indexOf('/user/money') != -1) {
         "money": "200.00",
         "ret": "1",
     };
+};
+myData = JSON.stringify(obj);
+
+const myResponse = {
+    status: myStatus,
+    headers: myHeaders, // Optional.
+    body: myData // Optional.
+};
+var $util = util();
+$util.notify('Emby Premiere 已激活');
+$util.done(myResponse);
 
