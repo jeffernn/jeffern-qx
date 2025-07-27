@@ -9,7 +9,7 @@ const myHeaders = {
     "X-Requested-With": "XMLHttpRequest",
     "User-Agent:": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
     "Accept": "application/json, text/javascript, */*; q=0.01"
-    "sec-ch-ua": "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"
+    "sec-ch-ua": ""Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138""
     "sec-ch-ua-mobile": "?0"
     "Sec-Fetch-Site": "same-origin"
     "Sec-Fetch-Mode": "cors"
