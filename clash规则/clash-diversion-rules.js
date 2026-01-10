@@ -1,446 +1,471 @@
-const NODE_SUFFIX="节点";
-function parseBool(e){
-return"boolean"==typeof e?e:"string"==typeof e&&("true"===e.toLowerCase()||"1"===e)
-}
-function parseNumber(e,t=0){
-if(null==e)return t;
-const o=parseInt(e,10);
-return isNaN(o)?t:o
-}
-function buildFeatureFlags(e){
-const t=Object.entries({
-loadbalance:"loadBalance",
-landing:"landing",
-ipv6:"ipv6Enabled",
-full:"fullConfig",
-keepalive:"keepAliveEnabled",
-fakeip:"fakeIPEnabled",
-quic:"quicEnabled"
-}).reduce((t,[o,r])=>(t[r]=parseBool(e[o])||!1,t),{});
-return t.countryThreshold=parseNumber(e.threshold,0),t
-}
-const rawArgs="undefined"!=typeof $arguments?$arguments:{},
-{loadBalance:loadBalance,landing:landing,ipv6Enabled:ipv6Enabled,fullConfig:fullConfig,keepAliveEnabled:keepAliveEnabled,fakeIPEnabled:fakeIPEnabled,quicEnabled:quicEnabled,countryThreshold:countryThreshold}=buildFeatureFlags(rawArgs);
-
-function getCountryGroupNames(e,t){
-return e.filter(e=>e.count>=t).map(e=>e.country+"节点")
-}
-function stripNodeSuffix(e){
-const t=new RegExp("节点$");
-return e.map(e=>e.replace(t,""))
-}
-const PROXY_GROUPS={
-SELECT:"光环",
-MANUAL:"手动选择",
-FALLBACK:"故障转移",
-DIRECT:"直连",
-LANDING:"落地节点",
-LOW_COST:"低倍率节点"
-},
-buildList=(...e)=>e.flat().filter(Boolean);
-
-function buildBaseLists({landing:e,lowCost:t,countryGroupNames:o}){
-const r=buildList(PROXY_GROUPS.FALLBACK,e&&PROXY_GROUPS.LANDING,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,"直连");
-return{
-defaultProxies:buildList(PROXY_GROUPS.SELECT,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,PROXY_GROUPS.DIRECT),
-defaultProxiesDirect:buildList(PROXY_GROUPS.DIRECT,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.SELECT,PROXY_GROUPS.MANUAL),
-defaultSelector:r,
-defaultFallback:buildList(e&&PROXY_GROUPS.LANDING,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,"直连")
-}
+// 功能标志解析函数
+function parseBool(e) {
+  return typeof e === "boolean" ? e : (typeof e === "string" && (e.toLowerCase() === "true" || e === "1"));
 }
 
-const ruleProviders={
-"广告杀手1️⃣":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Advertising/Advertising.list",
-path:"./ruleset/Advertising1.list"
-},
-"广告杀手2️⃣":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/ADDONE.list",
-path:"./ruleset/Advertising2.list"
-},
-"广告杀手3️⃣":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-QuantumultX.list",
-path:"./ruleset/Advertising3.list"
-},
-"毒奶特供(去网页广告计划)":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/ADwebdone.list",
-path:"./ruleset/ADwebdone.list"
-},
-"机场专线":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/limbopro/Profiles4limbo/main/airports.list",
-path:"./ruleset/Airports.list"
-},
-"国内直连1️⃣":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct1.list",
-path:"./ruleset/Direct1.list"
-},
-"国内直连2️⃣":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct2.list",
-path:"./ruleset/Direct2.list"
-},
-"国内直连3️⃣":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Direct/Direct.list",
-path:"./ruleset/Direct3.list"
-},
-"国内直连4️⃣":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct.list",
-path:"./ruleset/Direct4.list"
-},
-"🎬️ Netflix":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Netflix/Netflix.list",
-path:"./ruleset/Netflix.list"
-},
-"🐭 Disney+":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Disney/Disney.list",
-path:"./ruleset/Disney.list"
-},
-"🎵 TikTok":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/TikTok/TikTok.list",
-path:"./ruleset/TikTok.list"
-},
-"🍎 苹果服务":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Apple/Apple.list",
-path:"./ruleset/Apple.list"
-},
-"🤖 AI Platforms":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/OpenAI/OpenAI.list",
-path:"./ruleset/OpenAI.list"
-},
-"🤖 AI Platforms2":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/BardAI/BardAI.list",
-path:"./ruleset/BardAI.list"
-},
-"🤖 AI Platforms3":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Claude/Claude.list",
-path:"./ruleset/Claude.list"
-},
-"🤖 AI Platforms4":{
-type:"http",
-behavior:"domain",
-format:"text",
-interval:172800,
-url:"https://raw.githubusercontent.com/limbopro/Profiles4limbo/main/AI_Platforms_qx.list",
-path:"./ruleset/AIPlatforms.list"
+function parseNumber(e, t = 0) {
+  if (e == null) return t;
+  const num = parseInt(e, 10);
+  return isNaN(num) ? t : num;
 }
+
+// 构建功能标志
+function buildFeatureFlags(e) {
+  const flags = Object.entries({
+    loadbalance: "loadBalance",
+    landing: "landing",
+    ipv6: "ipv6Enabled",
+    full: "fullConfig",
+    keepalive: "keepAliveEnabled",
+    fakeip: "fakeIPEnabled",
+    quic: "quicEnabled"
+  }).reduce((acc, [key, mappedKey]) => {
+    acc[mappedKey] = parseBool(e[key]) || false;
+    return acc;
+  }, {});
+  flags.countryThreshold = parseNumber(e.threshold, 0); // 这个现在没用，但保留以防万一
+  return flags;
+}
+
+// 获取参数
+const rawArgs = typeof $arguments !== "undefined" ? $arguments : {};
+const {
+  loadBalance,
+  landing,
+  ipv6Enabled,
+  fullConfig,
+  keepAliveEnabled,
+  fakeIPEnabled,
+  quicEnabled,
+  countryThreshold // 这个现在没用，但保留以防万一
+} = buildFeatureFlags(rawArgs);
+
+// 定义代理组名称
+const PROXY_GROUPS = {
+  SELECT: "全局设置",
+  AUTO_SELECT: "自动优选",
+  ADS_BLOCK: "广告拦截",
+  DIRECT_CN: "国内直连",
+  NETFLIX: "Netflix",
+  DISNEY: "Disney+",
+  TIKTOK: "TikTok",
+  AI_PLATFORMS: "AI Platforms",
+  FINAL: "Final"
 };
 
-const baseRules=[
-"RULE-SET,广告杀手1️⃣,🚫 广告拦截",
-"RULE-SET,广告杀手2️⃣,🚫 广告拦截",
-"RULE-SET,广告杀手3️⃣,🚫 广告拦截",
-"RULE-SET,毒奶特供(去网页广告计划),🚫 广告拦截",
-"RULE-SET,机场专线,光环",
-"RULE-SET,国内直连1️⃣,🌐 国内直连",
-"RULE-SET,国内直连2️⃣,🌐 国内直连",
-"RULE-SET,国内直连3️⃣,🌐 国内直连",
-"RULE-SET,国内直连4️⃣,🌐 国内直连",
-"RULE-SET,🎬️ Netflix,🎬️ Netflix",
-"RULE-SET,🐭 Disney+,🐭 Disney+",
-"RULE-SET,🎵 TikTok,🎵 TikTok",
-"RULE-SET,🍎 苹果服务,🌐 国内直连",
-"RULE-SET,🤖 AI Platforms,🤖 AI Platforms",
-"RULE-SET,🤖 AI Platforms2,🤖 AI Platforms",
-"RULE-SET,🤖 AI Platforms3,🤖 AI Platforms",
-"RULE-SET,🤖 AI Platforms4,🤖 AI Platforms",
-"MATCH,🐟 Final"
+// 构建列表辅助函数
+const buildList = (...args) => args.flat().filter(Boolean);
+
+// 构建基础代理列表
+function buildBaseLists() {
+  // 默认情况下，全局设置包含所有可选代理
+  const defaultProxies = buildList(
+    PROXY_GROUPS.SELECT,
+    PROXY_GROUPS.AUTO_SELECT,
+    PROXY_GROUPS.TIKTOK,
+    PROXY_GROUPS.NETFLIX,
+    PROXY_GROUPS.DISNEY,
+    PROXY_GROUPS.AI_PLATFORMS,
+    PROXY_GROUPS.DIRECT_CN,
+    "REJECT"
+  );
+
+  // 直连优先的列表
+  const defaultProxiesDirect = buildList(
+    PROXY_GROUPS.DIRECT_CN,
+    PROXY_GROUPS.SELECT,
+    PROXY_GROUPS.AUTO_SELECT,
+    PROXY_GROUPS.TIKTOK,
+    PROXY_GROUPS.NETFLIX,
+    PROXY_GROUPS.DISNEY,
+    PROXY_GROUPS.AI_PLATFORMS,
+    "REJECT"
+  );
+
+  // 最终选择列表（通常用于兜底）
+  const defaultFinal = buildList(
+    PROXY_GROUPS.SELECT,
+    PROXY_GROUPS.AUTO_SELECT,
+    PROXY_GROUPS.TIKTOK,
+    PROXY_GROUPS.NETFLIX,
+    PROXY_GROUPS.DISNEY,
+    PROXY_GROUPS.AI_PLATFORMS,
+    PROXY_GROUPS.DIRECT_CN,
+    "REJECT"
+  );
+
+  return {
+    defaultProxies,
+    defaultProxiesDirect,
+    defaultFinal
+  };
+}
+
+// 规则提供者配置
+const ruleProviders = {
+  Advertising1: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Advertising/Advertising.list",
+    path: "./ruleset/Advertising1.list"
+  },
+  Advertising2: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/ADDONE.list",
+    path: "./ruleset/Advertising2.list"
+  },
+  Advertising3: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-QuantumultX.list",
+    path: "./ruleset/Advertising3.list"
+  },
+  Advertising4: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/ADwebdone.list",
+    path: "./ruleset/Advertising4.list"
+  },
+  AutoSelect: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/limbopro/Profiles4limbo/main/airports.list",
+    path: "./ruleset/AutoSelect.list"
+  },
+  Direct1: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct1.list",
+    path: "./ruleset/Direct1.list"
+  },
+  Direct2: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct2.list",
+    path: "./ruleset/Direct2.list"
+  },
+  Direct3: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Direct/Direct.list",
+    path: "./ruleset/Direct3.list"
+  },
+  Direct4: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct.list",
+    path: "./ruleset/Direct4.list"
+  },
+  Netflix: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Netflix/Netflix.list",
+    path: "./ruleset/Netflix.list"
+  },
+  Disney: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Disney/Disney.list",
+    path: "./ruleset/Disney.list"
+  },
+  Apple: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Apple/Apple.list",
+    path: "./ruleset/Apple.list"
+  },
+  OpenAI: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/OpenAI/OpenAI.list",
+    path: "./ruleset/OpenAI.list"
+  },
+  BardAI: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/BardAI/BardAI.list",
+    path: "./ruleset/BardAI.list"
+  },
+  Claude: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Claude/Claude.list",
+    path: "./ruleset/Claude.list"
+  },
+  AIPlatforms: {
+    type: "http",
+    behavior: "classical",
+    format: "text",
+    interval: 86400,
+    url: "https://raw.githubusercontent.com/limbopro/Profiles4limbo/main/AI_Platforms_qx.list",
+    path: "./ruleset/AIPlatforms.list"
+  }
+};
+
+// 基础规则列表
+const baseRules = [
+  // 广告拦截规则
+  "RULE-SET,Advertising1,广告拦截",
+  "RULE-SET,Advertising2,广告拦截",
+  "RULE-SET,Advertising3,广告拦截",
+  "RULE-SET,Advertising4,广告拦截",
+  // 自动优选规则
+  "RULE-SET,AutoSelect,自动优选",
+  // 国内直连规则
+  "RULE-SET,Direct1,国内直连",
+  "RULE-SET,Direct2,国内直连",
+  "RULE-SET,Direct3,国内直连",
+  "RULE-SET,Direct4,国内直连",
+  "RULE-SET,Apple,国内直连",
+  // 流媒体规则
+  "RULE-SET,Netflix,Netflix",
+  "RULE-SET,Disney,Disney+",
+  "RULE-SET,TikTok,TikTok", // 假设有一个 TikTok 规则集，这里没有提供 URL，可以添加或移除
+  // AI 平台规则
+  "RULE-SET,OpenAI,AI Platforms",
+  "RULE-SET,BardAI,AI Platforms",
+  "RULE-SET,Claude,AI Platforms",
+  "RULE-SET,AIPlatforms,AI Platforms",
+  // 兜底规则
+  `MATCH,${PROXY_GROUPS.FINAL}`
 ];
 
-function buildRules({quicEnabled:e}){
-const t=[...baseRules];
-return e||t.unshift("AND,((DST-PORT,443),(NETWORK,UDP)),REJECT"),t
+// 构建最终规则列表
+function buildRules({ quicEnabled }) {
+  const rules = [...baseRules];
+  if (!quicEnabled) {
+    // 如果未启用 QUIC，则阻止 UDP 上的 443 端口流量
+    rules.unshift("AND,((DST-PORT,443),(NETWORK,UDP)),REJECT");
+  }
+  return rules;
 }
 
-const snifferConfig={
-sniff:{
-TLS:{ports:[443,8443]},
-HTTP:{ports:[80,8080,8880]},
-QUIC:{ports:[443,8443]}
-},
-"override-destination":!1,
-enable:!0,
-"force-dns-mapping":!0,
-"skip-domain":["Mijia Cloud","dlg.io.mi.com","+.push.apple.com"]
+// Sniffer 配置
+const snifferConfig = {
+  sniff: {
+    TLS: { ports: [443, 8443] },
+    HTTP: { ports: [80, 8080, 8880] },
+    QUIC: { ports: [443, 8443] } // QUIC 嗅探也需要配置
+  },
+  "override-destination": false,
+  enable: true,
+  "force-dns-mapping": true,
+  "skip-domain": [
+    "Mijia Cloud",
+    "dlg.io.mi.com",
+    "+.push.apple.com"
+  ]
 };
 
-function buildDnsConfig({mode:e,fakeIpFilter:t}){
-const o={
-enable:!0,
-ipv6:ipv6Enabled,
-"prefer-h3":!0,
-"enhanced-mode":e,
-"default-nameserver":["119.29.29.29","223.5.5.5"],
-nameserver:[
-"223.5.5.5",
-"119.29.29.29", 
-"8.8.8.8",
-"1.1.1.1",
-"[2400:3200::1]",
-"[2400:3200:baba::1]", 
-"[2402:4e00::]",
-"[2001:4860:4860::8888]",
-"[2606:4700:4700::1111]"
-],
-"nameserver-policy": {
-"/*.icloud.com/": "119.29.29.29",
-"/*.icloud.com.cn/": "119.29.29.29",
-"/*.tencent.com/": "119.29.29.29",
-"/*.weixin.com/": "119.29.29.29"
-},
-"use-system-hosts": false
-};
-return t&&(o["fake-ip-filter"]=t),o
+// 构建 DNS 配置
+function buildDnsConfig({ mode = "redir-host", fakeIpFilter }) {
+  const config = {
+    enable: true,
+    ipv6: ipv6Enabled,
+    "prefer-h3": true,
+    "enhanced-mode": mode,
+    "default-nameserver": ["119.29.29.29", "223.5.5.5"],
+    nameserver: [
+      "223.5.5.5",
+      "119.29.29.29",
+      "8.8.8.8",
+      "1.1.1.1",
+      "[2400:3200::1]",
+      "[2400:3200:baba::1]",
+      "[2402:4e00::]",
+      "[2001:4860:4860::8888]",
+      "[2606:4700:4700::1111]"
+    ],
+    fallback: [], // 可以根据需要添加备用 DNS
+    "proxy-server-nameserver": ["https://dns.alidns.com/dns-query", "tls://dot.pub"]
+  };
+
+  // 添加自定义服务器规则
+  config["nameserver-policy"] = {
+    "/*.icloud.com": "119.29.29.29",
+    "/*.icloud.com.cn": "119.29.29.29",
+    "/*.tencent.com": "119.29.29.29",
+    "/*.weixin.com": "119.29.29.29"
+  };
+
+  if (fakeIpFilter) {
+    config["fake-ip-filter"] = fakeIpFilter;
+  }
+  return config;
 }
 
-const dnsConfig=buildDnsConfig({mode:"redir-host"}),
-dnsConfigFakeIp=buildDnsConfig({
-mode:"fake-ip",
-fakeIpFilter:["geosite:private","geosite:connectivity-check","geosite:cn","Mijia Cloud","dig.io.mi.com","localhost.ptlogin2.qq.com","*.icloud.com","*.stun.*.*","*.stun.*.*.*"]
-}),
-geoxURL={
-geoip:"https://gcore.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat",
-geosite:"https://gcore.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat",
-mmdb:"https://gcore.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb",
-asn:"https://gcore.jsdelivr.net/gh/Loyalsoldier/geoip@release/GeoLite2-ASN.mmdb"
-},
-countriesMeta={
-"香港":{pattern:"香港|港|HK|hk|Hong Kong|HongKong|hongkong|🇭🇰",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png"},
-"澳门":{pattern:"澳门|MO|Macau|🇲🇴",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Macao.png"},
-"台湾":{pattern:"台|新北|彰化|TW|Taiwan|🇹🇼",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Taiwan.png"},
-"新加坡":{pattern:"新加坡|坡|狮城|SG|Singapore|🇸🇬",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png"},
-"日本":{pattern:"日本|川日|东京|大阪|泉日|埼玉|沪日|深日|JP|Japan|🇯🇵",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png"},
-"韩国":{pattern:"KR|Korea|KOR|首尔|韩|韓|🇰🇷",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Korea.png"},
-"美国":{pattern:"美国|美|US|United States|🇺🇸",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png"},
-"加拿大":{pattern:"加拿大|Canada|CA|🇨🇦",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Canada.png"},
-"英国":{pattern:"英国|United Kingdom|UK|伦敦|London|🇬🇧",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_Kingdom.png"},
-"澳大利亚":{pattern:"澳洲|澳大利亚|AU|Australia|🇦🇺",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Australia.png"},
-"德国":{pattern:"德国|德|DE|Germany|🇩🇪",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Germany.png"},
-"法国":{pattern:"法国|法|FR|France|🇫🇷",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/France.png"},
-"俄罗斯":{pattern:"俄罗斯|俄|RU|Russia|🇷🇺",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Russia.png"},
-"泰国":{pattern:"泰国|泰|TH|Thailand|🇹🇭",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Thailand.png"},
-"印度":{pattern:"印度|IN|India|🇮🇳",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/India.png"},
-"马来西亚":{pattern:"马来西亚|马来|MY|Malaysia|🇲🇾",icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Malaysia.png"}
-};
-
-function hasLowCost(e){
-const t=/0\.[0-5]|低倍率|省流|大流量|实验性/i;
-return(e.proxies||[]).some(e=>t.test(e.name))
-}
-
-function parseCountries(e){
-const t=e.proxies||[],
-o=/家宽|家庭|家庭宽带|商宽|商业宽带|星链|Starlink|落地/i,
-r=Object.create(null),
-n={};
-for(const[e,t]of Object.entries(countriesMeta))n[e]=new RegExp(t.pattern.replace(/^\(\?i\)/,""));
-for(const e of t){
-const t=e.name||"";
-if(!o.test(t))for(const[e,o]of Object.entries(n))if(o.test(t)){
-r[e]=(r[e]||0)+1;
-break
-}
-}
-const s=[];
-for(const[e,t]of Object.entries(r))s.push({country:e,count:t});
-return s
-}
-
-function buildCountryProxyGroups({countries:e,landing:t,loadBalance:o}){
-const r=[],
-n="0\\.[0-5]|低倍率|省流|大流量|实验性",
-s=o?"load-balance":"url-test";
-for(const l of e){
-const e=countriesMeta[l];
-if(!e)continue;
-const i={
-name:`${l}节点`,
-icon:e.icon,
-"include-all":!0,
-filter:e.pattern,
-"exclude-filter":t?`(?i)家宽|家庭|家庭宽带|商宽|商业宽带|星链|Starlink|落地|${n}`:n,
-type:s
-};
-o||Object.assign(i,{url:"https://cp.cloudflare.com/generate_204",interval:60,tolerance:20,lazy:!1}),r.push(i)
-}
-return r
-}
-
-function buildProxyGroups({landing:e,countries:t,countryProxyGroups:o,lowCost:r,defaultProxies:n,defaultProxiesDirect:s,defaultSelector:l,defaultFallback:i}){
-const a=t.includes("台湾"),
-c=t.includes("香港"),
-p=t.includes("美国"),
-u=e?l.filter(e=>e!==PROXY_GROUPS.LANDING&&e!==PROXY_GROUPS.FALLBACK):[];
-
-return[
-{
-name:"光环",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/DHF.png",
-proxies:["✨","手动选择","直连"]
-},
-{
-name:"✨",
-type:"url-test",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/Pgxw.png",
-url:"https://cp.cloudflare.com/generate_204",
-interval:300,
-tolerance:0,
-"alive-checking":false,
-"include-all":true,
-filter:"自建|机场"
-},
-{
-name:"🚫 广告拦截",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/Advertising.png",
-proxies:["REJECT","REJECT-DROP","🌐 国内直连"]
-},
-{
-name:"🌐 国内直连",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/Hulu.png",
-proxies:["DIRECT"]
-},
-{
-name:"🎬️ Netflix",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/Netflix.png",
-proxies:["光环"]
-},
-{
-name:"🐭 Disney+",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/HWDS.png",
-proxies:["光环"]
-},
-{
-name:"🎵 TikTok",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/Tiktok.png",
-proxies:["光环"]
-},
-{
-name:"🤖 AI Platforms",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/Hijacking.png",
-proxies:["光环","DIRECT"]
-},
-{
-name:"🐟 Final",
-type:"select",
-icon:"https://raw.githubusercontent.com/Aoyt520/jiumeiquanX/master/quanX/Final.png",
-proxies:["光环","DIRECT"]
-},
-...o
-].filter(Boolean)
-}
-
-function main(e){
-const t={proxies:e.proxies},
-o=parseCountries(t),
-r=hasLowCost(t),
-n=getCountryGroupNames(o,countryThreshold),
-s=stripNodeSuffix(n),
-{defaultProxies:l,defaultProxiesDirect:i,defaultSelector:a,defaultFallback:c}=buildBaseLists({landing:landing,lowCost:r,countryGroupNames:n}),
-p=buildCountryProxyGroups({countries:s,landing:landing,loadBalance:loadBalance}),
-u=buildProxyGroups({landing:landing,countries:s,countryProxyGroups:p,lowCost:r,defaultProxies:l,defaultProxiesDirect:i,defaultSelector:a,defaultFallback:c}),
-d=u.map(e=>e.name);
-u.push({
-name:"GLOBAL",
-icon:"https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png",
-"include-all":!0,
-type:"select",
-proxies:d
+// DNS 配置实例
+const dnsConfig = buildDnsConfig({ mode: "redir-host" });
+const dnsConfigFakeIp = buildDnsConfig({
+  mode: "fake-ip",
+  fakeIpFilter: [
+    "geosite:private",
+    "geosite:connectivity-check",
+    "geosite:cn",
+    "Mijia Cloud",
+    "dig.io.mi.com",
+    "localhost.ptlogin2.qq.com",
+    "*.icloud.com",
+    "*.stun.*.*",
+    "*.stun.*.*.*"
+  ]
 });
-const g=buildRules({quicEnabled:quicEnabled});
-return fullConfig&&Object.assign(t,{
-"mixed-port":7890,
-"redir-port":7892,
-"tproxy-port":7893,
-"routing-mark":7894,
-"allow-lan":!0,
-ipv6:ipv6Enabled,
-mode:"rule",
-"unified-delay":!0,
-"tcp-concurrent":!0,
-"find-process-mode":"off",
-"log-level":"info",
-"geodata-loader":"standard",
-"external-controller":":9999",
-"disable-keep-alive":!keepAliveEnabled,
-profile:{"store-selected":!0}
-}),
-Object.assign(t,{
-"proxy-groups":u,
-"rule-providers":ruleProviders,
-rules:g,
-sniffer:snifferConfig,
-dns:fakeIPEnabled?dnsConfigFakeIp:dnsConfig,
-"geodata-mode":!0,
-"geox-url":geoxURL
-}),
-t
+
+// Geo 数据 URL
+const geoxURL = {
+  geoip: "https://gcore.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat",
+  geosite: "https://gcore.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat",
+  mmdb: "https://gcore.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb",
+  asn: "https://gcore.jsdelivr.net/gh/Loyalsoldier/geoip@release/GeoLite2-ASN.mmdb"
+};
+
+// 构建代理组
+function buildProxyGroups({ defaultProxies, defaultProxiesDirect, defaultFinal }) {
+  const groups = [
+    // 全局设置 - 选择主要代理策略
+    {
+      name: PROXY_GROUPS.SELECT,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Proxy.png",
+      type: "select",
+      proxies: defaultProxies
+    },
+    // 自动优选 - 使用 URL 测试选择最快节点
+    {
+      name: PROXY_GROUPS.AUTO_SELECT,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speedtest.png",
+      type: "url-test",
+      url: "https://cp.cloudflare.com/generate_204",
+      interval: 300,
+      tolerance: 50,
+      lazy: true,
+      use: ["AutoSelect"] // 引用规则集中的节点
+    },
+    // 广告拦截 - 拒绝连接
+    {
+      name: PROXY_GROUPS.ADS_BLOCK,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png",
+      type: "select",
+      proxies: ["REJECT", "REJECT-DROP", PROXY_GROUPS.DIRECT_CN]
+    },
+    // 国内直连 - 本地网络
+    {
+      name: PROXY_GROUPS.DIRECT_CN,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Direct.png",
+      type: "select",
+      proxies: ["DIRECT", PROXY_GROUPS.SELECT]
+    },
+    // Netflix - 选择适合的代理
+    {
+      name: PROXY_GROUPS.NETFLIX,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Netflix.png",
+      type: "select",
+      proxies: defaultProxies
+    },
+    // Disney+ - 选择适合的代理
+    {
+      name: PROXY_GROUPS.DISNEY,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Disney.png",
+      type: "select",
+      proxies: defaultProxies
+    },
+    // TikTok - 选择适合的代理
+    {
+      name: PROXY_GROUPS.TIKTOK,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png",
+      type: "select",
+      proxies: defaultProxies
+    },
+    // AI Platforms - 选择适合的代理
+    {
+      name: PROXY_GROUPS.AI_PLATFORMS,
+      icon: "https://gcore.jsdelivr.net/gh/powerfullz/override-rules@master/icons/chatgpt.png",
+      type: "select",
+      proxies: defaultProxies
+    },
+    // Final - 最终兜底策略
+    {
+      name: PROXY_GROUPS.FINAL,
+      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png",
+      type: "select",
+      proxies: defaultFinal
+    }
+  ];
+
+  return groups;
+}
+
+// 主函数
+function main(e) {
+  const config = {
+    proxies: e.proxies
+  };
+
+  const { defaultProxies, defaultProxiesDirect, defaultFinal } = buildBaseLists();
+  const proxyGroups = buildProxyGroups({ defaultProxies, defaultProxiesDirect, defaultFinal });
+  const rules = buildRules({ quicEnabled });
+
+  // 应用完整配置（如果启用）
+  if (fullConfig) {
+    Object.assign(config, {
+      "mixed-port": 7890,
+      "redir-port": 7892,
+      "tproxy-port": 7893,
+      "routing-mark": 7894,
+      "allow-lan": true,
+      ipv6: ipv6Enabled,
+      mode: "rule",
+      "unified-delay": true,
+      "tcp-concurrent": true,
+      "find-process-mode": "off",
+      "log-level": "info",
+      "geodata-loader": "standard",
+      "external-controller": ":9999",
+      "disable-keep-alive": !keepAliveEnabled,
+      profile: { "store-selected": true }
+    });
+  }
+
+  // 应用核心配置
+  Object.assign(config, {
+    "proxy-groups": proxyGroups,
+    "rule-providers": ruleProviders,
+    rules,
+    sniffer: snifferConfig,
+    dns: fakeIPEnabled ? dnsConfigFakeIp : dnsConfig,
+    "geodata-mode": true,
+    "geox-url": geoxURL
+  });
+
+  return config;
 }
