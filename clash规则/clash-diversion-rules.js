@@ -42,10 +42,7 @@ const {
 
 // 定义代理组名称
 const PROXY_GROUPS = {
-  SELECT: "全局设置",
-  AUTO_SELECT: "自动优选",
-  REJECT: "拒绝",
-  DIRECT: "直连"
+  AUTO_SELECT: "自动优选"
 };
 
 // 规则提供者配置 (保持不变)
@@ -148,7 +145,7 @@ function buildRules({ quicEnabled }) {
   const rules = [...baseRules];
   if (!quicEnabled) {
     // 如果未启用 QUIC，则阻止 UDP 上的 443 端口流量
-    rules.unshift("AND,((DST-PORT,443),(NETWORK,UDP)),拒绝");
+    rules.unshift("AND,((DST-PORT,443),(NETWORK,UDP)),REJECT");
   }
   return rules;
 }
