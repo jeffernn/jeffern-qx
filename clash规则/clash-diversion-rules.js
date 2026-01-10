@@ -44,62 +44,9 @@ const {
 const PROXY_GROUPS = {
   SELECT: "全局设置",
   AUTO_SELECT: "自动优选",
-  ADS_BLOCK: "广告拦截",
-  DIRECT_CN: "国内直连",
-  NETFLIX: "Netflix",
-  DISNEY: "Disney+",
-  TIKTOK: "TikTok",
-  AI_PLATFORMS: "AI Platforms",
-  FINAL: "Final"
+  REJECT: "拒绝",
+  DIRECT: "直连"
 };
-
-// 构建列表辅助函数
-const buildList = (...args) => args.flat().filter(Boolean);
-
-// 构建基础代理列表
-function buildBaseLists() {
-  // 默认情况下，全局设置包含所有可选代理
-  const defaultProxies = buildList(
-    PROXY_GROUPS.SELECT,
-    PROXY_GROUPS.AUTO_SELECT,
-    PROXY_GROUPS.TIKTOK,
-    PROXY_GROUPS.NETFLIX,
-    PROXY_GROUPS.DISNEY,
-    PROXY_GROUPS.AI_PLATFORMS,
-    PROXY_GROUPS.DIRECT_CN,
-    "REJECT"
-  );
-
-  // 直连优先的列表
-  const defaultProxiesDirect = buildList(
-    PROXY_GROUPS.DIRECT_CN,
-    PROXY_GROUPS.SELECT,
-    PROXY_GROUPS.AUTO_SELECT,
-    PROXY_GROUPS.TIKTOK,
-    PROXY_GROUPS.NETFLIX,
-    PROXY_GROUPS.DISNEY,
-    PROXY_GROUPS.AI_PLATFORMS,
-    "REJECT"
-  );
-
-  // 最终选择列表（通常用于兜底）
-  const defaultFinal = buildList(
-    PROXY_GROUPS.SELECT,
-    PROXY_GROUPS.AUTO_SELECT,
-    PROXY_GROUPS.TIKTOK,
-    PROXY_GROUPS.NETFLIX,
-    PROXY_GROUPS.DISNEY,
-    PROXY_GROUPS.AI_PLATFORMS,
-    PROXY_GROUPS.DIRECT_CN,
-    "REJECT"
-  );
-
-  return {
-    defaultProxies,
-    defaultProxiesDirect,
-    defaultFinal
-  };
-}
 
 // 规则提供者配置
 const ruleProviders = {
@@ -174,91 +121,25 @@ const ruleProviders = {
     interval: 86400,
     url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct.list",
     path: "./ruleset/Direct4.list"
-  },
-  Netflix: {
-    type: "http",
-    behavior: "classical",
-    format: "text",
-    interval: 86400,
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Netflix/Netflix.list",
-    path: "./ruleset/Netflix.list"
-  },
-  Disney: {
-    type: "http",
-    behavior: "classical",
-    format: "text",
-    interval: 86400,
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Disney/Disney.list",
-    path: "./ruleset/Disney.list"
-  },
-  Apple: {
-    type: "http",
-    behavior: "classical",
-    format: "text",
-    interval: 86400,
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Apple/Apple.list",
-    path: "./ruleset/Apple.list"
-  },
-  OpenAI: {
-    type: "http",
-    behavior: "classical",
-    format: "text",
-    interval: 86400,
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/OpenAI/OpenAI.list",
-    path: "./ruleset/OpenAI.list"
-  },
-  BardAI: {
-    type: "http",
-    behavior: "classical",
-    format: "text",
-    interval: 86400,
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/BardAI/BardAI.list",
-    path: "./ruleset/BardAI.list"
-  },
-  Claude: {
-    type: "http",
-    behavior: "classical",
-    format: "text",
-    interval: 86400,
-    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Claude/Claude.list",
-    path: "./ruleset/Claude.list"
-  },
-  AIPlatforms: {
-    type: "http",
-    behavior: "classical",
-    format: "text",
-    interval: 86400,
-    url: "https://raw.githubusercontent.com/limbopro/Profiles4limbo/main/AI_Platforms_qx.list",
-    path: "./ruleset/AIPlatforms.list"
   }
 };
 
 // 基础规则列表
 const baseRules = [
-  // 广告拦截规则
-  "RULE-SET,Advertising1,广告拦截",
-  "RULE-SET,Advertising2,广告拦截",
-  "RULE-SET,Advertising3,广告拦截",
-  "RULE-SET,Advertising4,广告拦截",
-  // 自动优选规则
+  // 广告拦截规则 -> 拒绝
+  "RULE-SET,Advertising1,拒绝",
+  "RULE-SET,Advertising2,拒绝",
+  "RULE-SET,Advertising3,拒绝",
+  "RULE-SET,Advertising4,拒绝",
+  // 自动优选规则 -> 代理
   "RULE-SET,AutoSelect,自动优选",
-  // 国内直连规则
-  "RULE-SET,Direct1,国内直连",
-  "RULE-SET,Direct2,国内直连",
-  "RULE-SET,Direct3,国内直连",
-  "RULE-SET,Direct4,国内直连",
-  "RULE-SET,Apple,国内直连",
-  // 流媒体规则
-  "RULE-SET,Netflix,Netflix",
-  "RULE-SET,Disney,Disney+",
-  "RULE-SET,TikTok,TikTok", // 假设有一个 TikTok 规则集，这里没有提供 URL，可以添加或移除
-  // AI 平台规则
-  "RULE-SET,OpenAI,AI Platforms",
-  "RULE-SET,BardAI,AI Platforms",
-  "RULE-SET,Claude,AI Platforms",
-  "RULE-SET,AIPlatforms,AI Platforms",
-  // 兜底规则
-  `MATCH,${PROXY_GROUPS.FINAL}`
+  // 国内直连规则 -> 直连
+  "RULE-SET,Direct1,直连",
+  "RULE-SET,Direct2,直连",
+  "RULE-SET,Direct3,直连",
+  "RULE-SET,Direct4,直连",
+  // 兜底规则 -> 全局设置
+  `MATCH,${PROXY_GROUPS.SELECT}`
 ];
 
 // 构建最终规则列表
@@ -266,7 +147,7 @@ function buildRules({ quicEnabled }) {
   const rules = [...baseRules];
   if (!quicEnabled) {
     // 如果未启用 QUIC，则阻止 UDP 上的 443 端口流量
-    rules.unshift("AND,((DST-PORT,443),(NETWORK,UDP)),REJECT");
+    rules.unshift("AND,((DST-PORT,443),(NETWORK,UDP)),拒绝");
   }
   return rules;
 }
@@ -351,97 +232,51 @@ const geoxURL = {
 };
 
 // 构建代理组
-function buildProxyGroups({ defaultProxies, defaultProxiesDirect, defaultFinal }) {
-  // 定义一个基础的选择列表，不包含可能形成循环的组
-  // 例如，只包含 "DIRECT", "REJECT", 和一个基础的 "全局设置" 选择器
-  const baseProxiesForServices = buildList(
-    PROXY_GROUPS.SELECT, // 指向全局设置，全局设置里可以有其他选项
-    "DIRECT",
-    "REJECT"
-  );
-
+function buildProxyGroups() {
   const groups = [
-    // 全局设置 - 选择主要代理策略，可以包含所有其他组
+    // 全局设置 - 选择主要代理策略
     {
       name: PROXY_GROUPS.SELECT,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Proxy.png",
       type: "select",
-      proxies: defaultProxies // 这个列表已经构建好，应该避免直接循环
+      proxies: [
+        PROXY_GROUPS.AUTO_SELECT,
+        "DIRECT", // 也可以包含 DIRECT 作为备选
+        "REJECT"  // 也可以包含 REJECT 作为备选
+      ]
     },
-    // 自动优选 - 使用 URL 测试选择最快节点
-    // 注意：type 为 url-test 时，proxies 通常是具体的节点，而不是其他组。
-    // 如果你想让它测试规则集里的节点，可能需要配置 "use" 字段，但这取决于 Clash 实现。
-    // 这里假设它需要一个节点列表或另一个 url-test 组。
-    // 如果 AutoSelect 规则集是用来筛选节点的，它本身不是一个节点组。
-    // 为了简单起见，我们暂时让它指向全局设置或其他 url-test 组。
-    // 如果确实需要基于规则集动态选择节点，可能需要更高级的配置或脚本。
+    // 自动优选 - 使用 URL 测试选择延迟最低的节点
     {
       name: PROXY_GROUPS.AUTO_SELECT,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speedtest.png",
-      type: "url-test",
-      url: "https://cp.cloudflare.com/generate_204",
-      interval: 300,
-      tolerance: 50,
-      lazy: true,
-      // proxies: [] // 如果是 url-test，proxies 通常是具体节点列表
-      // 或者，如果规则集 AutoSelect 是用来筛选节点的，可能需要这样配置（取决于 Clash 版本）：
-      // "use": ["AutoSelect"] // 这会使用 AutoSelect 规则集中的节点进行测试
-      // 但更常见的是，你需要一个包含实际代理节点的列表。
-      // 假设我们让它可以选择全局设置或其他 url-test 组
-      proxies: [PROXY_GROUPS.SELECT] // 或者指向一个包含实际节点的列表
+      type: "url-test", // 使用 url-test 类型
+      url: "https://cp.cloudflare.com/generate_204", // 测试 URL
+      interval: 300, // 测试间隔 (秒)
+      tolerance: 50, // 容差 (毫秒)
+      lazy: true,    // 懒惰模式
+      // proxies: [] // url-test 的 proxies 通常是具体的节点列表
+      // 如果你想让它测试规则集 AutoSelect 中的节点，可能需要 "use" 字段
+      // 但更常见的是，你需要提供一个包含实际代理节点的列表。
+      // 这里我们让它可以选择全局设置，或者你可以提供一个包含节点的列表。
+      // 假设我们让它可以测试全局设置下的节点（这取决于 Clash 实现）
+      // 或者，如果 AutoSelect 规则集是用于筛选节点，可能需要这样配置（取决于实现）：
+      "use": ["AutoSelect"] // 这会使用 AutoSelect 规则集中的节点进行测试
+      // 注意：如果 "use" 不起作用，你需要一个包含实际代理节点名称的数组。
+      // 例如: proxies: [/* 你的代理节点名称列表 */]
     },
-    // 广告拦截 - 拒绝连接
+    // 拒绝 - 拒绝连接
     {
-      name: PROXY_GROUPS.ADS_BLOCK,
+      name: PROXY_GROUPS.REJECT,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png",
       type: "select",
-      proxies: ["REJECT", "REJECT-DROP", PROXY_GROUPS.DIRECT_CN]
+      proxies: ["REJECT", "REJECT-DROP"]
     },
-    // 国内直连 - 本地网络
+    // 直连 - 本地网络
     {
-      name: PROXY_GROUPS.DIRECT_CN,
+      name: PROXY_GROUPS.DIRECT,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Direct.png",
       type: "select",
-      proxies: ["DIRECT", PROXY_GROUPS.SELECT] // 指向全局设置，而不是其他服务组
-    },
-    // Netflix - 选择适合的代理
-    {
-      name: PROXY_GROUPS.NETFLIX,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Netflix.png",
-      type: "select",
-      // proxies: defaultProxies // 这可能导致循环，因为它包含了 Netflix 自己
-      proxies: baseProxiesForServices // 使用基础列表，避免循环
-    },
-    // Disney+ - 选择适合的代理
-    {
-      name: PROXY_GROUPS.DISNEY,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Disney.png",
-      type: "select",
-      // proxies: defaultProxies // 这可能导致循环
-      proxies: baseProxiesForServices // 使用基础列表，避免循环
-    },
-    // TikTok - 选择适合的代理
-    {
-      name: PROXY_GROUPS.TIKTOK,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png",
-      type: "select",
-      // proxies: defaultProxies // 这可能导致循环
-      proxies: baseProxiesForServices // 使用基础列表，避免循环
-    },
-    // AI Platforms - 选择适合的代理
-    {
-      name: PROXY_GROUPS.AI_PLATFORMS,
-      icon: "https://gcore.jsdelivr.net/gh/powerfullz/override-rules@master/icons/chatgpt.png",
-      type: "select",
-      // proxies: defaultProxies // 这可能导致循环
-      proxies: baseProxiesForServices // 使用基础列表，避免循环
-    },
-    // Final - 最终兜底策略
-    {
-      name: PROXY_GROUPS.FINAL,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png",
-      type: "select",
-      proxies: defaultFinal // 这个列表也应该避免循环
+      proxies: ["DIRECT"]
     }
   ];
 
@@ -454,8 +289,7 @@ function main(e) {
     proxies: e.proxies
   };
 
-  const { defaultProxies, defaultProxiesDirect, defaultFinal } = buildBaseLists();
-  const proxyGroups = buildProxyGroups({ defaultProxies, defaultProxiesDirect, defaultFinal });
+  const proxyGroups = buildProxyGroups();
   const rules = buildRules({ quicEnabled });
 
   // 应用完整配置（如果启用）
