@@ -128,19 +128,19 @@ const ruleProviders = {
 // 基础规则列表
 const baseRules = [
   // 广告拦截规则 -> 拒绝
-  "RULE-SET,Advertising1,拒绝",
-  "RULE-SET,Advertising2,拒绝",
-  "RULE-SET,Advertising3,拒绝",
-  "RULE-SET,Advertising4,拒绝",
+  "RULE-SET,Advertising1,REJECT",
+  "RULE-SET,Advertising2,REJECT",
+  "RULE-SET,Advertising3,REJECT",
+  "RULE-SET,Advertising4,REJECT",
   // 假设 AirportsRule 是节点列表，否则这行无意义
   // "RULE-SET,AirportsRule,自动优选", // 如果 AirportsRule 是节点列表，才加这行
   // 国内直连规则 -> 直连
-  "RULE-SET,Direct1,直连",
-  "RULE-SET,Direct2,直连",
-  "RULE-SET,Direct3,直连",
-  "RULE-SET,Direct4,直连",
-  // 兜底规则 -> 全局设置
-  `MATCH,${PROXY_GROUPS.SELECT}`
+  "RULE-SET,Direct1,DIRECT",
+  "RULE-SET,Direct2,DIRECT",
+  "RULE-SET,Direct3,DIRECT",
+  "RULE-SET,Direct4,DIRECT",
+  // 兜底规则 -> 直连
+  "MATCH,DIRECT"
 ];
 
 // 构建最终规则列表
@@ -235,17 +235,6 @@ const geoxURL = {
 // 构建代理组
 function buildProxyGroups(inputProxies) { // 接收输入的代理列表
   const groups = [
-    // 全局设置 - 选择主要代理策略
-    {
-      name: PROXY_GROUPS.SELECT,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Proxy.png",
-      type: "select",
-      proxies: [
-        PROXY_GROUPS.AUTO_SELECT,
-        "DIRECT", // 也可以包含 DIRECT 作为备选
-        "REJECT"  // 也可以包含 REJECT 作为备选
-      ]
-    },
     // 自动优选 - 使用 URL 测试选择延迟最低的节点
     {
       name: PROXY_GROUPS.AUTO_SELECT,
@@ -258,20 +247,6 @@ function buildProxyGroups(inputProxies) { // 接收输入的代理列表
       // 使用传入的代理列表中的节点名称
       proxies: inputProxies.map(proxy => proxy.name) // 假设输入的 proxy 对象有 name 属性
       // 不再使用 "use": ["AutoSelect"]，因为 AutoSelect 是规则提供者
-    },
-    // 拒绝 - 拒绝连接
-    {
-      name: PROXY_GROUPS.REJECT,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png",
-      type: "select",
-      proxies: ["REJECT", "REJECT-DROP"]
-    },
-    // 直连 - 本地网络
-    {
-      name: PROXY_GROUPS.DIRECT,
-      icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Direct.png",
-      type: "select",
-      proxies: ["DIRECT"]
     }
   ];
 
