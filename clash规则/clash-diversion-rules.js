@@ -30,7 +30,7 @@ function stripNodeSuffix(e){
     return e.map(e=>e.replace(t,""))
 }
 const PROXY_GROUPS={
-    SELECT:"选择代理",
+    SELECT:"光环",  // 修改为新的策略组名称
     MANUAL:"手动选择",
     FALLBACK:"故障转移",
     DIRECT:"直连",
@@ -40,12 +40,12 @@ const PROXY_GROUPS={
 buildList=(...e)=>e.flat().filter(Boolean);
 
 function buildBaseLists({landing:e,lowCost:t,countryGroupNames:o}){
-    const r=buildList(PROXY_GROUPS.FALLBACK,e&&PROXY_GROUPS.LANDING,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,"DIRECT");
+    const r=buildList(PROXY_GROUPS.FALLBACK,e&&PROXY_GROUPS.LANDING,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,"直连");
     return{
         defaultProxies:buildList(PROXY_GROUPS.SELECT,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,PROXY_GROUPS.DIRECT),
         defaultProxiesDirect:buildList(PROXY_GROUPS.DIRECT,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.SELECT,PROXY_GROUPS.MANUAL),
         defaultSelector:r,
-        defaultFallback:buildList(e&&PROXY_GROUPS.LANDING,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,"DIRECT")
+        defaultFallback:buildList(e&&PROXY_GROUPS.LANDING,o,t&&PROXY_GROUPS.LOW_COST,PROXY_GROUPS.MANUAL,"直连")
     }
 }
 
