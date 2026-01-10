@@ -250,32 +250,18 @@ const dns = {
     }
 };
 
-// 主函数 - 与原始代码保持一致的结构
+// 主函数
 function main(config) {
-    // 合并传入的配置和生成的配置
-    const result = {
+    return {
         ...config,
         "proxy-groups": proxyGroups,
         "rule-providers": ruleProviders,
         rules: rules,
         dns: dns,
         mode: "rule",
-        "log-level": "info",
-        "geodata-mode": true
+        "log-level": "info"
     };
-    
-    return result;
 }
-
-// 与原始代码相同的入口点
-const rawArgs = typeof $arguments !== "undefined" ? $arguments : {};
 
 // 输出配置
-if (typeof $done !== 'undefined') {
-    $done(main({}));
-} else {
-    // 用于调试或导出配置对象
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = { main, config: main({}) };
-    }
-}
+$done(main({}));
