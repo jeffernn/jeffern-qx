@@ -352,15 +352,29 @@ const geoxURL = {
 
 // 构建代理组
 function buildProxyGroups({ defaultProxies, defaultProxiesDirect, defaultFinal }) {
+  // 定义一个基础的选择列表，不包含可能形成循环的组
+  // 例如，只包含 "DIRECT", "REJECT", 和一个基础的 "全局设置" 选择器
+  const baseProxiesForServices = buildList(
+    PROXY_GROUPS.SELECT, // 指向全局设置，全局设置里可以有其他选项
+    "DIRECT",
+    "REJECT"
+  );
+
   const groups = [
-    // 全局设置 - 选择主要代理策略
+    // 全局设置 - 选择主要代理策略，可以包含所有其他组
     {
       name: PROXY_GROUPS.SELECT,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Proxy.png",
       type: "select",
-      proxies: defaultProxies
+      proxies: defaultProxies // 这个列表已经构建好，应该避免直接循环
     },
     // 自动优选 - 使用 URL 测试选择最快节点
+    // 注意：type 为 url-test 时，proxies 通常是具体的节点，而不是其他组。
+    // 如果你想让它测试规则集里的节点，可能需要配置 "use" 字段，但这取决于 Clash 实现。
+    // 这里假设它需要一个节点列表或另一个 url-test 组。
+    // 如果 AutoSelect 规则集是用来筛选节点的，它本身不是一个节点组。
+    // 为了简单起见，我们暂时让它指向全局设置或其他 url-test 组。
+    // 如果确实需要基于规则集动态选择节点，可能需要更高级的配置或脚本。
     {
       name: PROXY_GROUPS.AUTO_SELECT,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Speedtest.png",
@@ -369,7 +383,12 @@ function buildProxyGroups({ defaultProxies, defaultProxiesDirect, defaultFinal }
       interval: 300,
       tolerance: 50,
       lazy: true,
-      use: ["AutoSelect"] // 引用规则集中的节点
+      // proxies: [] // 如果是 url-test，proxies 通常是具体节点列表
+      // 或者，如果规则集 AutoSelect 是用来筛选节点的，可能需要这样配置（取决于 Clash 版本）：
+      // "use": ["AutoSelect"] // 这会使用 AutoSelect 规则集中的节点进行测试
+      // 但更常见的是，你需要一个包含实际代理节点的列表。
+      // 假设我们让它可以选择全局设置或其他 url-test 组
+      proxies: [PROXY_GROUPS.SELECT] // 或者指向一个包含实际节点的列表
     },
     // 广告拦截 - 拒绝连接
     {
@@ -383,42 +402,46 @@ function buildProxyGroups({ defaultProxies, defaultProxiesDirect, defaultFinal }
       name: PROXY_GROUPS.DIRECT_CN,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Direct.png",
       type: "select",
-      proxies: ["DIRECT", PROXY_GROUPS.SELECT]
+      proxies: ["DIRECT", PROXY_GROUPS.SELECT] // 指向全局设置，而不是其他服务组
     },
     // Netflix - 选择适合的代理
     {
       name: PROXY_GROUPS.NETFLIX,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Netflix.png",
       type: "select",
-      proxies: defaultProxies
+      // proxies: defaultProxies // 这可能导致循环，因为它包含了 Netflix 自己
+      proxies: baseProxiesForServices // 使用基础列表，避免循环
     },
     // Disney+ - 选择适合的代理
     {
       name: PROXY_GROUPS.DISNEY,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Disney.png",
       type: "select",
-      proxies: defaultProxies
+      // proxies: defaultProxies // 这可能导致循环
+      proxies: baseProxiesForServices // 使用基础列表，避免循环
     },
     // TikTok - 选择适合的代理
     {
       name: PROXY_GROUPS.TIKTOK,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png",
       type: "select",
-      proxies: defaultProxies
+      // proxies: defaultProxies // 这可能导致循环
+      proxies: baseProxiesForServices // 使用基础列表，避免循环
     },
     // AI Platforms - 选择适合的代理
     {
       name: PROXY_GROUPS.AI_PLATFORMS,
       icon: "https://gcore.jsdelivr.net/gh/powerfullz/override-rules@master/icons/chatgpt.png",
       type: "select",
-      proxies: defaultProxies
+      // proxies: defaultProxies // 这可能导致循环
+      proxies: baseProxiesForServices // 使用基础列表，避免循环
     },
     // Final - 最终兜底策略
     {
       name: PROXY_GROUPS.FINAL,
       icon: "https://gcore.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Global.png",
       type: "select",
-      proxies: defaultFinal
+      proxies: defaultFinal // 这个列表也应该避免循环
     }
   ];
 
