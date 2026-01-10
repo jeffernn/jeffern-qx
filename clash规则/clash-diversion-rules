@@ -1,4 +1,4 @@
-// QuantumultX配置转换为mihomo格式
+// QuantumultX配置转换为mihomo配置
 
 // 策略组定义
 const proxyGroups = [
@@ -65,7 +65,7 @@ const proxyGroups = [
 
 // 规则提供者定义
 const ruleProviders = {
-    Advertising1: {
+    "广告杀手1️⃣": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -73,7 +73,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Advertising/Advertising.list",
         path: "./ruleset/Advertising1.list"
     },
-    Advertising2: {
+    "广告杀手2️⃣": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -81,7 +81,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/ADDONE.list",
         path: "./ruleset/Advertising2.list"
     },
-    Advertising3: {
+    "广告杀手3️⃣": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -89,7 +89,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-QuantumultX.list",
         path: "./ruleset/Advertising3.list"
     },
-    ADwebdone: {
+    "毒奶特供(去网页广告计划)": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -97,7 +97,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/ADwebdone.list",
         path: "./ruleset/ADwebdone.list"
     },
-    Airports: {
+    "机场专线": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -105,7 +105,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/limbopro/Profiles4limbo/main/airports.list",
         path: "./ruleset/Airports.list"
     },
-    Direct1: {
+    "国内直连1️⃣": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -113,7 +113,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct1.list",
         path: "./ruleset/Direct1.list"
     },
-    Direct2: {
+    "国内直连2️⃣": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -121,7 +121,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct2.list",
         path: "./ruleset/Direct2.list"
     },
-    Direct3: {
+    "国内直连3️⃣": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -129,7 +129,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Direct/Direct.list",
         path: "./ruleset/Direct3.list"
     },
-    Direct4: {
+    "国内直连4️⃣": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -137,7 +137,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/Direct.list",
         path: "./ruleset/Direct4.list"
     },
-    Netflix: {
+    "🎬️ Netflix": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -145,7 +145,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Netflix/Netflix.list",
         path: "./ruleset/Netflix.list"
     },
-    Disney: {
+    "🐭 Disney+": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -153,7 +153,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Disney/Disney.list",
         path: "./ruleset/Disney.list"
     },
-    TikTok: {
+    "🎵 TikTok": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -161,7 +161,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/TikTok/TikTok.list",
         path: "./ruleset/TikTok.list"
     },
-    Apple: {
+    "🍎 苹果服务": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -169,7 +169,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Apple/Apple.list",
         path: "./ruleset/Apple.list"
     },
-    OpenAI: {
+    "🤖 AI Platforms": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -177,7 +177,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/OpenAI/OpenAI.list",
         path: "./ruleset/OpenAI.list"
     },
-    BardAI: {
+    "🤖 AI Platforms2": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -185,7 +185,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/BardAI/BardAI.list",
         path: "./ruleset/BardAI.list"
     },
-    Claude: {
+    "🤖 AI Platforms3": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -193,7 +193,7 @@ const ruleProviders = {
         url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Claude/Claude.list",
         path: "./ruleset/Claude.list"
     },
-    AIPlatforms: {
+    "🤖 AI Platforms4": {
         type: "http",
         behavior: "domain",
         format: "text",
@@ -205,28 +205,28 @@ const ruleProviders = {
 
 // 规则定义
 const rules = [
-    "RULE-SET,Advertising1,🚫 广告拦截",
-    "RULE-SET,Advertising2,🚫 广告拦截",
-    "RULE-SET,Advertising3,🚫 广告拦截",
-    "RULE-SET,ADwebdone,🚫 广告拦截",
-    "RULE-SET,Airports,光环",
-    "RULE-SET,Direct1,🌐 国内直连",
-    "RULE-SET,Direct2,🌐 国内直连",
-    "RULE-SET,Direct3,🌐 国内直连",
-    "RULE-SET,Direct4,🌐 国内直连",
-    "RULE-SET,Netflix,🎬️ Netflix",
-    "RULE-SET,Disney,🐭 Disney+",
-    "RULE-SET,TikTok,🎵 TikTok",
-    "RULE-SET,Apple,🌐 国内直连",
-    "RULE-SET,OpenAI,🤖 AI Platforms",
-    "RULE-SET,BardAI,🤖 AI Platforms",
-    "RULE-SET,Claude,🤖 AI Platforms",
-    "RULE-SET,AIPlatforms,🤖 AI Platforms",
+    "RULE-SET,广告杀手1️⃣,🚫 广告拦截",
+    "RULE-SET,广告杀手2️⃣,🚫 广告拦截",
+    "RULE-SET,广告杀手3️⃣,🚫 广告拦截",
+    "RULE-SET,毒奶特供(去网页广告计划),🚫 广告拦截",
+    "RULE-SET,机场专线,光环",
+    "RULE-SET,国内直连1️⃣,🌐 国内直连",
+    "RULE-SET,国内直连2️⃣,🌐 国内直连",
+    "RULE-SET,国内直连3️⃣,🌐 国内直连",
+    "RULE-SET,国内直连4️⃣,🌐 国内直连",
+    "RULE-SET,🎬️ Netflix,🎬️ Netflix",
+    "RULE-SET,🐭 Disney+,🐭 Disney+",
+    "RULE-SET,🎵 TikTok,🎵 TikTok",
+    "RULE-SET,🍎 苹果服务,🌐 国内直连",
+    "RULE-SET,🤖 AI Platforms,🤖 AI Platforms",
+    "RULE-SET,🤖 AI Platforms2,🤖 AI Platforms",
+    "RULE-SET,🤖 AI Platforms3,🤖 AI Platforms",
+    "RULE-SET,🤖 AI Platforms4,🤖 AI Platforms",
     "MATCH,🐟 Final"
 ];
 
 // DNS配置
-const dnsConfig = {
+const dns = {
     enable: true,
     "use-system-hosts": false,
     "enhanced-mode": "redir-host",
@@ -250,13 +250,36 @@ const dnsConfig = {
     }
 };
 
-// 主函数
+// mihomo配置主函数
 function main(config) {
-    return {
+    // 合并传入的配置和生成的配置
+    const result = {
         ...config,
         "proxy-groups": proxyGroups,
         "rule-providers": ruleProviders,
         rules: rules,
-        dns: dnsConfig
+        dns: dns
     };
+    
+    return result;
+}
+
+// 导出主函数供mihomo使用
+if (typeof $arguments !== 'undefined' && $arguments) {
+    // 如果在mihomo环境中运行
+    const args = {};
+    $arguments.forEach(arg => {
+        const [key, value] = arg.split('=');
+        args[key] = value;
+    });
+    
+    // 将配置输出到mihomo
+    $done({ 
+        ...main({}),
+        mode: "rule",
+        "log-level": "info"
+    });
+} else {
+    // 用于调试或导出配置对象
+    module.exports = { main, config: main({}) };
 }
