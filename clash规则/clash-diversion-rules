@@ -228,7 +228,7 @@ const rules = [
 // DNS配置
 const dns = {
     enable: true,
-    "use-system-hosts": false,
+    "use-system-hosts": false,  // 对应 no-system
     "enhanced-mode": "redir-host",
     "default-nameserver": ["119.29.29.29", "223.5.5.5"],
     nameserver: [
@@ -250,7 +250,7 @@ const dns = {
     }
 };
 
-// mihomo配置主函数
+// 主函数 - 与原始代码保持一致的结构
 function main(config) {
     // 合并传入的配置和生成的配置
     const result = {
@@ -258,28 +258,24 @@ function main(config) {
         "proxy-groups": proxyGroups,
         "rule-providers": ruleProviders,
         rules: rules,
-        dns: dns
+        dns: dns,
+        mode: "rule",
+        "log-level": "info",
+        "geodata-mode": true
     };
     
     return result;
 }
 
-// 导出主函数供mihomo使用
-if (typeof $arguments !== 'undefined' && $arguments) {
-    // 如果在mihomo环境中运行
-    const args = {};
-    $arguments.forEach(arg => {
-        const [key, value] = arg.split('=');
-        args[key] = value;
-    });
-    
-    // 将配置输出到mihomo
-    $done({ 
-        ...main({}),
-        mode: "rule",
-        "log-level": "info"
-    });
+// 与原始代码相同的入口点
+const rawArgs = typeof $arguments !== "undefined" ? $arguments : {};
+
+// 输出配置
+if (typeof $done !== 'undefined') {
+    $done(main({}));
 } else {
     // 用于调试或导出配置对象
-    module.exports = { main, config: main({}) };
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = { main, config: main({}) };
+    }
 }
