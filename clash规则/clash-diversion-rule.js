@@ -48,7 +48,7 @@ const PROXY_GROUPS = {
   DIRECT: "直连"
 };
 
-// 规则提供者配置
+// 规则提供者配置 (保持不变)
 const ruleProviders = {
   Advertising1: {
     type: "http",
@@ -82,13 +82,14 @@ const ruleProviders = {
     url: "https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E5%88%86%E6%B5%81/ADwebdone.list",
     path: "./ruleset/Advertising4.list"
   },
-  AutoSelect: {
+  // 注意：Airports.list 仍然作为规则集，除非它实际上是节点列表
+  AirportsRule: { // 重命名以区分
     type: "http",
     behavior: "classical",
-    format: "text",
+    format: "text", // 假设是文本格式的规则
     interval: 86400,
     url: "https://raw.githubusercontent.com/limbopro/Profiles4limbo/main/airports.list",
-    path: "./ruleset/AutoSelect.list"
+    path: "./ruleset/AirportsRule.list"
   },
   Direct1: {
     type: "http",
@@ -131,8 +132,8 @@ const baseRules = [
   "RULE-SET,Advertising2,拒绝",
   "RULE-SET,Advertising3,拒绝",
   "RULE-SET,Advertising4,拒绝",
-  // 自动优选规则 -> 代理
-  "RULE-SET,AutoSelect,自动优选",
+  // 假设 AirportsRule 是节点列表，否则这行无意义
+  // "RULE-SET,AirportsRule,自动优选", // 如果 AirportsRule 是节点列表，才加这行
   // 国内直连规则 -> 直连
   "RULE-SET,Direct1,直连",
   "RULE-SET,Direct2,直连",
@@ -232,7 +233,7 @@ const geoxURL = {
 };
 
 // 构建代理组
-function buildProxyGroups() {
+function buildProxyGroups(inputProxies) { // 接收输入的代理列表
   const groups = [
     // 全局设置 - 选择主要代理策略
     {
@@ -254,15 +255,9 @@ function buildProxyGroups() {
       interval: 300, // 测试间隔 (秒)
       tolerance: 50, // 容差 (毫秒)
       lazy: true,    // 懒惰模式
-      // proxies: [] // url-test 的 proxies 通常是具体的节点列表
-      // 如果你想让它测试规则集 AutoSelect 中的节点，可能需要 "use" 字段
-      // 但更常见的是，你需要提供一个包含实际代理节点的列表。
-      // 这里我们让它可以选择全局设置，或者你可以提供一个包含节点的列表。
-      // 假设我们让它可以测试全局设置下的节点（这取决于 Clash 实现）
-      // 或者，如果 AutoSelect 规则集是用于筛选节点，可能需要这样配置（取决于实现）：
-      "use": ["AutoSelect"] // 这会使用 AutoSelect 规则集中的节点进行测试
-      // 注意：如果 "use" 不起作用，你需要一个包含实际代理节点名称的数组。
-      // 例如: proxies: [/* 你的代理节点名称列表 */]
+      // 使用传入的代理列表中的节点名称
+      proxies: inputProxies.map(proxy => proxy.name) // 假设输入的 proxy 对象有 name 属性
+      // 不再使用 "use": ["AutoSelect"]，因为 AutoSelect 是规则提供者
     },
     // 拒绝 - 拒绝连接
     {
@@ -289,7 +284,7 @@ function main(e) {
     proxies: e.proxies
   };
 
-  const proxyGroups = buildProxyGroups();
+  const proxyGroups = buildProxyGroups(e.proxies); // 将输入的代理列表传递给 buildProxyGroups
   const rules = buildRules({ quicEnabled });
 
   // 应用完整配置（如果启用）
