@@ -1730,7 +1730,6 @@ HOST-SUFFIX,wanfeng1.com
 HOST-SUFFIX,wep016.top
 HOST-SUFFIX,win-stock.com.cn
 HOST-SUFFIX,zantainet.com
-
 HOST-SUFFIX,dh54wf.xyz
 HOST-SUFFIX,g2q3e.cn
 
@@ -1739,12 +1738,9 @@ HOST-SUFFIX,114so.cn
 HOST-SUFFIX,go.10086.cn
 HOST-SUFFIX,hivedata.cc
 HOST-SUFFIX,navi.gd.chinamobile.com
-#禁止goodnotes6认证系统联网
-#host-suffix, isi.csan.goodnotes.com.cn
-#host-suffix, isi.csan.goodnotes.com 
 
 # 一些容易被忽视的分流
-host, ntb.lanjie100.com
+HOST, ntb.lanjie100.com
 
 # > 贴吧屏蔽域名dns查询
-ip-cidr, 180.76.76.200/32, reject
+IP-CIDR, 180.76.76.200/32
