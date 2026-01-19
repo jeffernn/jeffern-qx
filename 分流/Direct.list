@@ -1365,15 +1365,16 @@ IP-CIDR,101.198.208.0/20,China
 IP-CIDR,101.199.196.0/22,China
 
 # 一些比较容易忽视的分流
-host, ad.12306.cn
-host, gg.caixin.com
-host-suffix, ucweb.com
-host-suffix, kuwo.cn
-host, sdkapp.uve.weibo.com
-geoip, cn
-ip-cidr, 10.0.0.0/8
-ip-cidr, 127.0.0.0/8
-ip-cidr, 172.16.0.0/12
-ip-cidr, 192.168.0.0/16
-ip-cidr, 224.0.0.0/24
-ip-cidr, 182.254.116.0/24
+HOST, ad.12306.cn
+HOST, gg.caixin.com
+HOST-SUFFIX, ucweb.com
+HOST-SUFFIX, kuwo.cn
+HOST, sdkapp.uve.weibo.com
+HOST-SUFFIX, local
+GEOIP, cn
+IP-CIDR, 10.0.0.0/8
+IP-CIDR, 127.0.0.0/8
+IP-CIDR, 172.16.0.0/12
+IP-CIDR, 192.168.0.0/16
+IP-CIDR, 224.0.0.0/24
+IP-CIDR, 182.254.116.0/24
