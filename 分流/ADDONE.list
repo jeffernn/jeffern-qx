@@ -1744,3 +1744,9 @@ HOST, ntb.lanjie100.com
 
 # > 贴吧屏蔽域名dns查询
 IP-CIDR, 180.76.76.200/32
+
+
+# 避免迅雷版权问题
+HOST, hub5idx.v6.shub.sandai.net
+HOST, hub5emu.v6.shub.sandai.net
+HOST, hub5btmain.v6.shub.sandai.net
