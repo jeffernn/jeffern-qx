@@ -16,20 +16,19 @@ let body = {
       }
     },
     "subscribe_status_map" : {
-
+      "SUPER_VIP": "SUBSCRIBED"
     },
     "identity" : [
-
+      "MEMBER",
+      "SUPER_VIP"
     ],
-    // 只改这里 ↓
     "member_type" : "SUPER_VIP",
     "super_vip_exp_at" : 253392455349000,
-    "total_capacity" : 6597069766656,
     "secret_use_capacity" : 128784273002,
     "is_new_user" : false,
     "created_at" : 1622760342000,
     "trial_status_map" : {
-
+      "SUPER_VIP": "EXPIRED"
     },
     "use_capacity" : 128784273002,
     "deep_recycle_stat" : {
@@ -41,23 +40,23 @@ let body = {
       "recycle_svip_serve_days" : 30
     },
     "fr_subscribe_status_map" : {
-
+      "SUPER_VIP": "ACTIVE"
     },
+    "total_capacity" : 6597069766656,
     "video_backup" : 1,
     "image_backup" : 1,
     "secret_total_capacity" : 10737418240,
     "subscribe_pay_channel_map" : {
-
+      "SUPER_VIP": "ALIPAY"
     },
     "member_status" : {
       "VIP" : "UNPAID",
       "Z_VIP" : "UNPAID",
       "MINI_VIP" : "UNPAID",
-      // 只改这里 ↓
       "SUPER_VIP" : "PAID"
     },
     "extend_capacity_composition" : {
-
+      "SUPER_VIP": "5900G"
     },
     "acc_status" : 0
   },
