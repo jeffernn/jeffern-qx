@@ -1,4 +1,4 @@
-let body = {
+var obj = {
   "status": 200,
   "code": 0,
   "data": {
@@ -8,4 +8,4 @@ let body = {
   }
 };
 
-$done({ body: JSON.stringify(body) });
+$done({body: JSON.stringify(obj)});
