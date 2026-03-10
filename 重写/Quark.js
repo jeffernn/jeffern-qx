@@ -1,11 +1,14 @@
-let body = {
-  "status": 200,
-  "code": 0,
-  "data": {
-    "member_type": "SUPER_VIP",
-    "super_vip_exp_at": 4102444800000,
-    "total_capacity": 6597069766656
-  }
-};
+try {
+    let obj = JSON.parse($response.body);
 
-$done({ body: JSON.stringify(body) });
+    if (obj.data) {
+        obj.data.member_type = "SUPER_VIP";
+        obj.data.super_vip_exp_at = 4102444800000;
+        obj.data.total_capacity = 6597069766656;
+    }
+
+    $done({ body: JSON.stringify(obj) });
+
+} catch (e) {
+    $done({ body: $response.body });
+}
