@@ -6,9 +6,9 @@ try {
 
         obj.data.video_list.forEach(v => {
 
-            v.accessable = true;
             v.member_right = "normal";
             v.right = "normal";
+            v.accessable = true;
 
         });
 
@@ -16,7 +16,7 @@ try {
 
     $done({ body: JSON.stringify(obj) });
 
-} catch(e) {
+} catch (e) {
 
     $done({ body: $response.body });
 
