@@ -1,7 +1,6 @@
-let body = $response.body;
-let obj = JSON.parse(body);
+var body = $response.body;
+var obj = JSON.parse(body);
 
-// 强制修改返回字段
 obj.status = 200;
 obj.code = 0;
 obj.data = {
