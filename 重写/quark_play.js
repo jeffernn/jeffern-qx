@@ -6,8 +6,8 @@ try {
 
         obj.data.video_list.forEach(v => {
 
-            v.member_right = "normal";
-            v.right = "normal";
+            v.member_right = "SUPER_VIP";
+            v.right = "SUPER_VIP";
             v.accessable = true;
 
         });
