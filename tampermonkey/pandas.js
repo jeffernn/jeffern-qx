@@ -166,6 +166,24 @@
     const style=document.createElement("style");
     style.textContent=".vjs-menu-item-badge{display:none!important}";
     document.head.appendChild(style);
+    //移除无关元素
+    (function removeVideoButtons() {
+      const selectors = [
+        "a.video-title-right-open-text", // 手机提示
+        "i.video-title-right-open-icon.icon-sjck", // 手机提示图标
+        "a.g-button[node-type='share']", // 分享
+        "a.g-button[node-type='download']", // 下载
+        "a.g-button[node-type='appeal']", // 申诉
+        "a.g-button[node-type='notes']" // 记笔记
+      ];
+
+     // 定时扫描页面并移除这些元素
+     setInterval(() => {
+       selectors.forEach(sel => {
+         document.querySelectorAll(sel).forEach(el => el.remove());
+       });
+     }, 500); // 每 500ms 扫描一次
+   })();
 
   let localsTimer = setInterval(() => {
     if (!unsafeWindow.locals) return
