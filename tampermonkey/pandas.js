@@ -169,12 +169,23 @@
     //移除无关元素
     (function removeVideoButtons() {
       const selectors = [
-        "a.video-title-right-open-text", // 手机提示
+        // 视频右侧相关
+        "a.video-title-right-open-text",            // 手机提示文字
         "i.video-title-right-open-icon.icon-sjck", // 手机提示图标
-        "a.g-button[node-type='share']", // 分享
-        "a.g-button[node-type='download']", // 下载
-        "a.g-button[node-type='appeal']", // 申诉
-        "a.g-button[node-type='notes']" // 记笔记
+        "a.g-button[node-type='share']",            // 分享按钮
+        "a.g-button[node-type='download']",         // 下载按钮
+        "a.g-button[node-type='appeal']",           // 申诉按钮
+        "a.g-button[node-type='notes']",            // 记笔记按钮
+        "div.video-functions-tips",                 // 播放器右上角提示面板
+
+        // 顶部会员信息及按钮
+        "span[node-type='app-user-vip-center']",   // 会员中心
+        "a.app-download",                           // 客户端下载
+        "a.icon-feedback",                          // 意见反馈
+        "a.icon.app-notice",                        // 系统通知
+        "span[node-type='app-user-info']",          // 用户头像、昵称、VIP图标
+        "dl[node-type='header-apps']",              // 顶部应用栏
+        "dd[node-type='header-link']"               // 顶部导航链接
       ];
 
      // 定时扫描页面并移除这些元素
