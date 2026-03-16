@@ -198,7 +198,8 @@ document.head.appendChild(bgStyle);
         // 底部页脚
         "div.dis-footer",
         //其他视频字样
-        "div.video-other-title"
+        "div.video-other-title",
+        "div.video-list-time"
       ];
 
      // 定时扫描页面并移除这些元素
