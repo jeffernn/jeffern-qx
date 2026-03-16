@@ -162,6 +162,14 @@
     }
 
   hookRequest()
+    // 设置背景颜色
+    const bgStyle = document.createElement("style");
+    bgStyle.textContent = `
+    body, html, #app, .main-container {
+    background-color: #F5F5F5 !important;
+     }
+   `;
+document.head.appendChild(bgStyle);
     //移除SVIP无效图标
     const style=document.createElement("style");
     style.textContent=".vjs-menu-item-badge{display:none!important}";
