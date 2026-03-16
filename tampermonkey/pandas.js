@@ -177,7 +177,6 @@
         "a.g-button[node-type='appeal']",           // 申诉按钮
         "a.g-button[node-type='notes']",            // 记笔记按钮
         "div.video-functions-tips",                 // 播放器右上角提示面板
-
         // 顶部会员信息及按钮
         "span[node-type='app-user-vip-center']",   // 会员中心
         "a.app-download",                           // 客户端下载
@@ -189,7 +188,9 @@
         "a.icon.icon-theme.app-theme.app-icon",     // 皮肤中心按钮
         "div[node-type='module-header-wrapper']",    // 顶部 header 容器
         // 底部页脚
-        "div.dis-footer"
+        "div.dis-footer",
+        //其他视频字样
+        "div.video-other-title"
       ];
 
      // 定时扫描页面并移除这些元素
