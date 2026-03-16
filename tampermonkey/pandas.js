@@ -1,18 +1,10 @@
 // ==UserScript==
 // @name        pandas网盘
-// @namespace   http://tampermonkey.net/
 // @match       https://pan.baidu.com/
 // @match       https://pan.baidu.com/*
 // @grant       unsafeWindow
 // @run-at      document-start
-// @version     1.2
-// @license     MIT
-// @author      Gwen
-// @downloadUrl https://greasyfork.org/scripts/469774-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98svip%E4%BC%9A%E5%91%98%E7%A0%B4%E8%A7%A3%E9%9D%92%E6%98%A5%E7%89%88/code/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98Svip%E4%BC%9A%E5%91%98%E7%A0%B4%E8%A7%A3%E9%9D%92%E6%98%A5%E7%89%88.user.js
-// @homepageUrl https://greasyfork.org/zh-CN/scripts/469774-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98svip%E4%BC%9A%E5%91%98%E7%A0%B4%E8%A7%A3%E9%9D%92%E6%98%A5%E7%89%88
-// @description 修改所有可改的身份信息，修改成超级会员身份，可以使用网站自带的倍速、字幕等功能。
-// @downloadURL https://update.greasyfork.org/scripts/469774/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98Svip%E4%BC%9A%E5%91%98%E7%A0%B4%E8%A7%A3%E9%9D%92%E6%98%A5%E7%89%88.user.js
-// @updateURL https://update.greasyfork.org/scripts/469774/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98Svip%E4%BC%9A%E5%91%98%E7%A0%B4%E8%A7%A3%E9%9D%92%E6%98%A5%E7%89%88.meta.js
+// @author      Jeffern
 // ==/UserScript==
 
 (function() {
@@ -78,7 +70,7 @@
                 "v10_id": "666666",
                 "last_manual_collection_time": 0
               }
-              res.product_infos = [{
+              res。product_infos = [{
                 "product_id": "",
                 "start_time": 1685635199,
                 "end_time": 1888227199,
@@ -88,7 +80,7 @@
                 "auto_upgrade_to_svip": 0,
                 "product_name": "svip2_nd",
                 "status": 0,
-                "function_num": 0,
+                "function_num": 0，
                 "buy_description": "",
                 "product_description": "",
                 "cur_svip_type": "month"
@@ -184,7 +176,7 @@
       } else if (n == 'v10_id') {
         t = '666666'
       }
-      console.log(arguments)
+      console。log(arguments)
       originalSet.apply(this, [n, t])
     }
     if (unsafeWindow.locals.userInfo) {
