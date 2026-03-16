@@ -162,6 +162,11 @@
     }
 
   hookRequest()
+    //移除SVIP无效图标
+    const style=document.createElement("style");
+    style.textContent=".vjs-menu-item-badge{display:none!important}";
+    document.head.appendChild(style);
+
   let localsTimer = setInterval(() => {
     if (!unsafeWindow.locals) return
     clearInterval(localsTimer)
