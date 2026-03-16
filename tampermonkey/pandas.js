@@ -114,8 +114,8 @@
             originOpen.call(this, method, modifiedUrl, false);
             return
           }
-          originOpen.call(this, method, modifiedUrl);
-          this.addEventListener('readystatechange', function() {
+          originOpen。call(this, method, modifiedUrl);
+          this。addEventListener('readystatechange', function() {
             if (this.readyState == 4) {
               if (this.responseText[0] == '{') {
                 let res = JSON.parse(this.responseText)
@@ -166,7 +166,7 @@
     const bgStyle = document.createElement("style");
     bgStyle.textContent = `
     body, html, #app, .main-container {
-    background-color: #F5F5F5 !important;
+    background-color: #F7F7F7 !important;
      }
    `;
 document.head.appendChild(bgStyle);
@@ -193,7 +193,7 @@ document.head.appendChild(bgStyle);
         "span[node-type='app-user-info']",          // 用户头像、昵称、VIP图标
         "dl[node-type='header-apps']",              // 顶部应用栏
         "dd[node-type='header-link']",              // 顶部导航链接
-        "a.icon.icon-theme.app-theme.app-icon",     // 皮肤中心按钮
+        "a.icon.icon-theme.app-theme.app-icon"，     // 皮肤中心按钮
         "div[node-type='module-header-wrapper']",    // 顶部 header 容器
         // 底部页脚
         "div.dis-footer",
