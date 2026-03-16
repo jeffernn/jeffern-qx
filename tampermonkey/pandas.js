@@ -185,7 +185,11 @@
         "a.icon.app-notice",                        // 系统通知
         "span[node-type='app-user-info']",          // 用户头像、昵称、VIP图标
         "dl[node-type='header-apps']",              // 顶部应用栏
-        "dd[node-type='header-link']"               // 顶部导航链接
+        "dd[node-type='header-link']",              // 顶部导航链接
+        "a.icon.icon-theme.app-theme.app-icon",     // 皮肤中心按钮
+        "div[node-type='module-header-wrapper']",    // 顶部 header 容器
+        // 底部页脚
+        "div.dis-footer"
       ];
 
      // 定时扫描页面并移除这些元素
