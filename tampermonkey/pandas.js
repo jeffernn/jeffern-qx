@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        pandas网盘
+// @name        pandas
 // @match       https://pan.baidu.com/
 // @match       https://pan.baidu.com/*
 // @grant       unsafeWindow
@@ -70,7 +70,7 @@
                 "v10_id": "666666",
                 "last_manual_collection_time": 0
               }
-              res。product_infos = [{
+              res.product_infos = [{
                 "product_id": "",
                 "start_time": 1685635199,
                 "end_time": 1888227199,
@@ -80,7 +80,7 @@
                 "auto_upgrade_to_svip": 0,
                 "product_name": "svip2_nd",
                 "status": 0,
-                "function_num": 0，
+                "function_num": 0,
                 "buy_description": "",
                 "product_description": "",
                 "cur_svip_type": "month"
@@ -176,7 +176,7 @@
       } else if (n == 'v10_id') {
         t = '666666'
       }
-      console。log(arguments)
+      console.log(arguments)
       originalSet.apply(this, [n, t])
     }
     if (unsafeWindow.locals.userInfo) {
