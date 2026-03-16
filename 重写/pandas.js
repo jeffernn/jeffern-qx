@@ -7,10 +7,10 @@ name:pandas
 [rewrite_local]
 
 ^https:\/\/pan\.baidu\.com\/api\/loginStatus url script-response-body https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
-;^https:\/\/pan\.baidu\.com\/user\/info url script-response-body https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
-;^https:\/\/pan\.baidu\.com\/membership\/user url script-response-body https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
-;^https:\/\/pan\.baidu\.com\/msg\/streaming url script-response-body https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
-;^https:\/\/pan\.baidu\.com\/api\/streaming url script-request-header https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
+^https:\/\/pan\.baidu\.com\/user\/info url script-response-body https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
+^https:\/\/pan\.baidu\.com\/membership\/user url script-response-body https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
+^https:\/\/pan\.baidu\.com\/msg\/streaming url script-response-body https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
+^https:\/\/pan\.baidu\.com\/api\/streaming url script-request-header https://github.com/jeffernn/jeffern-qx/new/main/%E9%87%8D%E5%86%99/pandas.js
 
 [mitm]
 
