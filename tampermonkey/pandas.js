@@ -114,8 +114,8 @@
             originOpen.call(this, method, modifiedUrl, false);
             return
           }
-          originOpen。call(this, method, modifiedUrl);
-          this。addEventListener('readystatechange', function() {
+          originOpen.call(this, method, modifiedUrl);
+          this.addEventListener('readystatechange', function() {
             if (this.readyState == 4) {
               if (this.responseText[0] == '{') {
                 let res = JSON.parse(this.responseText)
@@ -180,7 +180,7 @@ document.head.appendChild(bgStyle);
         // 视频右侧相关
         "a.video-title-right-open-text",            // 手机提示文字
         "i.video-title-right-open-icon.icon-sjck", // 手机提示图标
-        "a.g-button[node-type='share']",            // 分享按钮
+        "a.g-button[node-type='share']"，            // 分享按钮
         "a.g-button[node-type='download']",         // 下载按钮
         "a.g-button[node-type='appeal']",           // 申诉按钮
         "a.g-button[node-type='notes']",            // 记笔记按钮
@@ -193,7 +193,7 @@ document.head.appendChild(bgStyle);
         "span[node-type='app-user-info']",          // 用户头像、昵称、VIP图标
         "dl[node-type='header-apps']",              // 顶部应用栏
         "dd[node-type='header-link']",              // 顶部导航链接
-        "a.icon.icon-theme.app-theme.app-icon"，     // 皮肤中心按钮
+        "a.icon.icon-theme.app-theme.app-icon",     // 皮肤中心按钮
         "div[node-type='module-header-wrapper']",    // 顶部 header 容器
         // 底部页脚
         "div.dis-footer",
@@ -209,6 +209,16 @@ document.head.appendChild(bgStyle);
        });
      }, 500); // 每 500ms 扫描一次
    })();
+
+    // 让视频组件整体下移
+    const moveVideoDown = document.createElement("style");
+    moveVideoDown.textContent = `
+    .module-video.global-clearfix {
+    margin-top: 85px !important; /* 可根据需求调整数值 */
+    }
+    `;
+    document.head.appendChild(moveVideoDown);
+
 
   let localsTimer = setInterval(() => {
     if (!unsafeWindow.locals) return
