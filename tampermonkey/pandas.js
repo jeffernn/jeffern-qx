@@ -170,6 +170,7 @@
      }
    `;
 document.head.appendChild(bgStyle);
+
     //移除SVIP无效图标及其字幕功能
     const style=document.createElement("style");
     style.textContent=`
@@ -184,8 +185,15 @@ document.head.appendChild(bgStyle);
     .vjs-subtitle-wrapper .vjs-full-menu-text{
     display:none!important;
     }
+    /* 隐藏音量菜单 */
+    .vjs-volume-wrapper { display: none !important; }
+    .vjs-volume-wrapper .vjs-full-menu-text { display: none !important; }
+
+    /* 隐藏整个音量面板 */
+    .vjs-volume-panel { display: none !important; }
     `;
     document.head.appendChild(style);
+
     //移除无关元素
     (function removeVideoButtons() {
       const selectors = [
@@ -230,6 +238,19 @@ document.head.appendChild(bgStyle);
     }
     `;
     document.head.appendChild(moveVideoDown);
+
+    // 等待播放器实例加载完成，设置默认音量为 100%
+    function setDefaultVolume() {
+    const video = document.querySelector('video');
+        if(video){
+            video.volume = 1; // 音量 0~1, 1 表示 100%
+            video.muted = false; // 取消静音
+        } else {
+    // 如果视频还没加载，延迟重试
+            setTimeout(setDefaultVolume, 100);
+        }
+     }
+     setDefaultVolume();
 
 
   let localsTimer = setInterval(() => {
