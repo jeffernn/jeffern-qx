@@ -224,7 +224,9 @@ document.head.appendChild(bgStyle);
         "div.dis-footer",
         //其他视频字样
         "div.video-other-title",
-        "div.video-list-time"
+        "div.video-list-time",
+        //左上角视频标题
+          "div.video-title"
       ];
 
      // 定时扫描页面并移除这些元素
@@ -239,7 +241,7 @@ document.head.appendChild(bgStyle);
     const moveVideoDown = document.createElement("style");
     moveVideoDown.textContent = `
     .module-video.global-clearfix {
-    margin-top: 100px !important; /* 可根据需求调整数值 */
+    margin-top: 140px !important; /* 可根据需求调整数值 */
     }
     `;
     document.head.appendChild(moveVideoDown);
