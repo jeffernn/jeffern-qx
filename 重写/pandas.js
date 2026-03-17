@@ -92,7 +92,7 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
 
   data.records[0].nick_name = "Jeffern";
   data.records[0].priority_name = "Jeffern";
-  data.records[0].avatar_url = "https://zhongdu.oss-cn-beijing.aliyuncs.com/app/20250723/17532551159065978.jpg";
+  data.records[0].avatar_url = "https://i.111666.best/image/kOZOdAsS4U34jQG3zFXmN7.jpeg";
 
   $done({
     body: JSON.stringify(data)
