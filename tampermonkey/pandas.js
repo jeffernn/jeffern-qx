@@ -191,6 +191,11 @@ document.head.appendChild(bgStyle);
 
     /* 隐藏整个音量面板 */
     .vjs-volume-panel { display: none !important; }
+
+    /* 隐藏下拉列表顶部文字提示 */
+    .vjs-menu-footnote-text { display: none !important; }
+    .vjs-full-menu-icon { display: none !important; }
+    .vjs-menu-title { display: none !important; }
     `;
     document.head.appendChild(style);
 
