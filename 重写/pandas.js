@@ -1,3 +1,18 @@
+/*
+ *
+ *
+name：pandas
+*******************************
+[rewrite_local]
+^https?:\/\/pan\.baidu\.com.+(rest\/.+\/membership\/user|api\/user\/getinfo)\? url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/pandas.js
+;^https?:\/\/.+(pcs\.baidu\.com|baidu\.com)\/rest\/2\.0\/pcs\/file\?.*\bfid= url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/pandas.js
+
+[mitm] 
+hostname = pan.baidu.com, *.pcs.baidu.com, *.baidu.com
+
+*
+*
+*/
 // 定时调用函数（但 f2 未定义）
 setInterval(function () {
   f2();
