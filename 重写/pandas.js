@@ -92,7 +92,7 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
 
   data.records[0].nick_name = "Jeffern";
   data.records[0].priority_name = "Jeffern";
-  data.records[0].avatar_url = "https://i.111666.best/image/kOZOdAsS4U34jQG3zFXmN7.jpeg";
+  data.records[0].avatar_url = "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAERzVdpubSfXr4fb7gLYftyr4FaPrgDzgACMR0AAud10VWoY_4HehWSIzoE.jpeg";
 
   $done({
     body: JSON.stringify(data)
