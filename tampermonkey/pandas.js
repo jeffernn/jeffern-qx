@@ -62,7 +62,7 @@
                   "nextState": "normal"
                 }
               }
-              res。level_info = {
+              res.level_info = {
                 "current_value": 12090,
                 "current_level": 10,
                 "history_value": 11830,
@@ -86,7 +86,7 @@
                 "cur_svip_type": "month"
               }]
               res.current_product = {
-                "cluster": "vip"，
+                "cluster": "vip",
                 "detail_cluster": "svip",
                 "product_type": "vip2_1m_auto",
                 "product_id": "12187135090581539740"
@@ -114,19 +114,19 @@
             originOpen.call(this, method, modifiedUrl, false);
             return
           }
-          originOpen。call(this, method, modifiedUrl);
+          originOpen.call(this, method, modifiedUrl);
           this.addEventListener('readystatechange', function() {
             if (this.readyState == 4) {
               if (this.responseText[0] == '{') {
                 let res = JSON.parse(this.responseText)
-                store。adToken = res.adToken
+                store.adToken = res.adToken
                 let manualRequest = new XMLHttpRequest();
                 // let manualUrl = `https://pan.baidu.com/api/streaming?app_id=250528&clienttype=0&channel=chunlei&web=1&isplayer=1&check_blue=1&type=M3U8_AUTO_${store.resolutionPattern.exec(url)[1]}&trans=&vip=0` +
                 //           `&bdstoken=${store.bdstoken||unsafeWindow.locals.bdstoken}&path=${store.path}&jsToken=${unsafeWindow.jsToken}`
                 let manualUrl = modifiedUrl
                 console.log(manualUrl)
                 manualRequest.open(method, manualUrl, false);
-                manualRequest。send();
+                manualRequest.send();
                 Object.defineProperty(this, "status", {
                   writable: true,
                 });
@@ -146,7 +146,7 @@
               let res = JSON.parse(this.responseText)
               res.ltime = 0.000001
               res.adTime = 0.000001
-              console。log(res)
+              console.log(res)
               Object.defineProperty(this, 'responseText', {
                 writable: true,
               })
@@ -169,10 +169,22 @@
     background-color: #F7F7F7 !important;
      }
    `;
-document。head.appendChild(bgStyle);
-    //移除SVIP无效图标
+document.head.appendChild(bgStyle);
+    //移除SVIP无效图标及其字幕功能
     const style=document.createElement("style");
-    style.textContent=".vjs-menu-item-badge{display:none!important}";
+    style.textContent=`
+    .vjs-menu-item-badge{display:none!important}
+
+    /* 只隐藏字幕菜单 */
+    .vjs-subtitle-wrapper{
+    display:none!important;
+    }
+
+    /* 隐藏字幕文字 */
+    .vjs-subtitle-wrapper .vjs-full-menu-text{
+    display:none!important;
+    }
+    `;
     document.head.appendChild(style);
     //移除无关元素
     (function removeVideoButtons() {
@@ -180,7 +192,7 @@ document。head.appendChild(bgStyle);
         // 视频右侧相关
         "a.video-title-right-open-text",            // 手机提示文字
         "i.video-title-right-open-icon.icon-sjck", // 手机提示图标
-        "a.g-button[node-type='share']"，            // 分享按钮
+        "a.g-button[node-type='share']",            // 分享按钮
         "a.g-button[node-type='download']",         // 下载按钮
         "a.g-button[node-type='appeal']",           // 申诉按钮
         "a.g-button[node-type='notes']",            // 记笔记按钮
