@@ -13,25 +13,24 @@ hostname = pan.baidu.com, *.pcs.baidu.com, *.baidu.com
 *
 *
 */
-// 定时调用函数（但 f2 未定义）
 setInterval(function () {
   f2();
 }, 4000);
 
-// 固定的 Cookie（BDUSS）
+
 const COOKIE = "bduss=khmSlF3YVhOWjFzR1Q1bmpxd3paVks1NlA5LWlwdFVzTURDV34xQ2dtb3JlT1pvSVFBQUFBJCQAAAAAAQAAAAEAAAAddbqcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACvrvmgr675oY";
 
-// 如果是请求阶段
+
 if (typeof $response === "undefined" || Object.keys($response).length === 0) {
 
-  // 拦截百度网盘下载接口
+
   if ($request.url.includes("/rest/2.0/pcs/file") &&
       $request.url.includes("method=locatedownload")) {
 
     let headers = $request.headers;
 
     if (headers) {
-      // 注入 Cookie
+   
       headers.Cookie = COOKIE;
 
       $done({
@@ -45,10 +44,10 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
     $done({});
   }
 
-// 如果是响应阶段
+
 } else if ($request.url.includes("/membership/user")) {
 
-  // 伪造会员信息（SVIP）
+
   $done({
     body: JSON.stringify({
       currenttime: 1573473597,
@@ -85,7 +84,7 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
     })
   });
 
-// 修改用户信息
+
 } else if ($request.url.includes("/user/getinfo")) {
 
   let data = JSON.parse($response.body);
