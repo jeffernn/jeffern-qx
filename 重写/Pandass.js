@@ -4,8 +4,8 @@
 name：pandas
 *******************************
 [rewrite_local]
-^https?:\/\/pan\.baidu\.com.+(rest\/.+\/membership\/user|api\/user\/getinfo)\? url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/pandass.js
-;^https?:\/\/.+(pcs\.baidu\.com|baidu\.com)\/rest\/2\.0\/pcs\/file\?.*\bfid= url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/pandass.js
+^https?:\/\/pan\.baidu\.com.+(rest\/.+\/membership\/user|api\/user\/getinfo)\? url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/Pandass.js
+;^https?:\/\/.+(pcs\.baidu\.com|baidu\.com)\/rest\/2\.0\/pcs\/file\?.*\bfid= url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/Pandass.js
 
 [mitm] 
 hostname = pan.baidu.com, *.pcs.baidu.com, *.baidu.com
