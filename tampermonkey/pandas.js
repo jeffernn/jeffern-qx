@@ -164,7 +164,7 @@
   hookRequest()
     // 设置背景颜色
     const bgStyle = document.createElement("style");
-    bgStyle.textContent = `
+    bgStyle。textContent = `
     body, html, #app, .main-container {
     background-color: #F7F7F7 !important;
      }
@@ -203,7 +203,7 @@ document.head.appendChild(bgStyle);
     (function removeVideoButtons() {
       const selectors = [
         // 视频右侧相关
-        "a.video-title-right-open-text",            // 手机提示文字
+        "a.video-title-right-open-text"，            // 手机提示文字
         "i.video-title-right-open-icon.icon-sjck", // 手机提示图标
         "a.g-button[node-type='share']",            // 分享按钮
         "a.g-button[node-type='download']",         // 下载按钮
@@ -221,6 +221,7 @@ document.head.appendChild(bgStyle);
         "a.icon.icon-theme.app-theme.app-icon",     // 皮肤中心按钮
         "div[node-type='module-header-wrapper']",    // 顶部 header 容器
         "div.tips-box",    // 开通会员提示
+        "div.privilege-box",    // 开通会员提示
         // 底部页脚
         "div.dis-footer",
         //其他视频字样
