@@ -62,7 +62,7 @@
                   "nextState": "normal"
                 }
               }
-              res.level_info = {
+              res。level_info = {
                 "current_value": 12090,
                 "current_level": 10,
                 "history_value": 11830,
@@ -86,8 +86,8 @@
                 "cur_svip_type": "month"
               }]
               res.current_product = {
-                "cluster": "vip",
-                "detail_cluster": "svip",
+                "cluster": "vip"，
+                "detail_cluster": "svip"，
                 "product_type": "vip2_1m_auto",
                 "product_id": "12187135090581539740"
               }
@@ -115,7 +115,7 @@
             return
           }
           originOpen.call(this, method, modifiedUrl);
-          this.addEventListener('readystatechange', function() {
+          this。addEventListener('readystatechange', function() {
             if (this.readyState == 4) {
               if (this.responseText[0] == '{') {
                 let res = JSON.parse(this.responseText)
@@ -139,12 +139,12 @@
             }
           })
         } else if (url.indexOf('/msg/streaming') != -1) {
-          this.addEventListener('readystatechange', function() {
+          this。addEventListener('readystatechange', function() {
             if (this.readyState == 4) {
               if (this.responseText[0] != '{')
                 return
               let res = JSON.parse(this.responseText)
-              res.ltime = 0.000001
+              res。ltime = 0.000001
               res.adTime = 0.000001
               console.log(res)
               Object.defineProperty(this, 'responseText', {
@@ -217,9 +217,10 @@ document.head.appendChild(bgStyle);
         "a.icon.app-notice",                        // 系统通知
         "span[node-type='app-user-info']",          // 用户头像、昵称、VIP图标
         "dl[node-type='header-apps']",              // 顶部应用栏
-        "dd[node-type='header-link']",              // 顶部导航链接
+        "dd[node-type='header-link']"，              // 顶部导航链接
         "a.icon.icon-theme.app-theme.app-icon",     // 皮肤中心按钮
         "div[node-type='module-header-wrapper']",    // 顶部 header 容器
+        "div.tips-box",    // 开通会员提示
         // 底部页脚
         "div.dis-footer",
         //其他视频字样
