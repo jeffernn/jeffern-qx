@@ -218,6 +218,10 @@
     .vjs-menu-footnote-text { display: none !important; }
     .vjs-full-menu-icon { display: none !important; }
     .vjs-menu-title { display: none !important; }
+    /* ✅ 修改字幕菜单 padding-bottom 为 15px */
+    ul.vjs-menu-content {
+        padding-bottom: 15px !important;
+    }
     `;
     document.head.appendChild(style);
 
