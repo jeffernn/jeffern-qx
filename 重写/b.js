@@ -83,9 +83,9 @@ if (url.indexOf("/members/detail") != -1) {
         memberTemplate.data.memberType = 11;
     } else if (url.indexOf("tiku_prefix=xingce") != -1) {
         memberTemplate.data.memberType = 2;
-    } else if (url.indexOf("tiku_prefix=sysl") != -1) {
+    } else if (url.indexOf("tiku_prefix=shenlun") != -1) {
         memberTemplate.data.memberType = 1;
-    } else if (url.indexOf("tiku_prefix=sygj") != -1) {
+    } else if (url.indexOf("tiku_prefix=sydw") != -1) {
         memberTemplate.data.memberType = 4;
     }
 
