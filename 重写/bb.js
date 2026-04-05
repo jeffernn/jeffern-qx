@@ -3,9 +3,9 @@ name：fenbi_member
 **************************************
 
 [rewrite_local]
-^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/user_member\/home.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/b.js
-^https?:\/\/ke\.fenbi\.com\/ipad\/v3/members/detail.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/b.js
-^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/members\/my.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/b.js
+^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/user_member\/home.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/bb.js
+^https?:\/\/ke\.fenbi\.com\/ipad\/v3/members/detail.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/bb.js
+^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/members\/my.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/bb.js
 [mitm]
 hostname = ke.fenbi.com
 
