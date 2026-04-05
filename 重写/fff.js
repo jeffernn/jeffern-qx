@@ -3,8 +3,8 @@ name：fenbi_member
 **************************************
 
 [rewrite_local]
-^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/user_member\/home.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/ff.js
-^https?:\/\/ke\.fenbi\.com\/ipad\/v3/members/detail.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/ff.js
+^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/user_member\/home.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/fff.js
+^https?:\/\/ke\.fenbi\.com\/ipad\/v3/members/detail.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/重写/fff.js
 
 [mitm]
 hostname = ke.fenbi.com
@@ -85,7 +85,7 @@ var memberTemplate = {
 // 根据 tiku_prefix 替换 memberType
 if (url.indexOf("tiku_prefix=syzc") != -1) {
     memberTemplate.data.memberType = 11;
-} else if (url.indexOf("tiku_prefix=syxc") != -1) {
+} else if (url.indexOf("tiku_prefix=xingce") != -1) {
     memberTemplate.data.memberType = 2;
 } else if (url.indexOf("tiku_prefix=sysl") != -1) {
     memberTemplate.data.memberType = 1;
