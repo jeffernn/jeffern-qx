@@ -3,7 +3,7 @@ name：fenbi_member
 **************************************
 
 [rewrite_local]
-^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/user_member\/home url script-response-body https://raw.githubusercontent.com/你的仓库/refs/heads/main/fenbi_member.js
+^https?:\/\/ke\.fenbi\.com\/ipad\/v3\/user_member\/home url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fbb.js
 
 [mitm]
 hostname = ke.fenbi.com
