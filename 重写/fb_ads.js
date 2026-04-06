@@ -1,5 +1,6 @@
 /*************************************
 name：fenbi_member
+author:jeffern
 **************************************
 
 [rewrite_local]
@@ -39,50 +40,50 @@ var url = $request.url;
 
 // ===== /user_member/home =====
 if (url.indexOf("/user_member/home") != -1) {
-    var chxm1023 = JSON.parse(body);
+    var jeffern = JSON.parse(body);
 
-    if (chxm1023.data && chxm1023.data.userMember) {
+    if (jeffern.data && jeffern.data.userMember) {
 
         if (url.indexOf("member_type=11") != -1) {
-            chxm1023.data.userMember.member = true;
-            chxm1023.data.userMember.memberClass = 2;
-            chxm1023.data.userMember.memberType = 11;
-            chxm1023.data.userMember.expireTime = 4079347199000;
-            chxm1023.data.userMember.hasBeenMember = true;
-            chxm1023.data.userMember.memberStatus = 2;
-            chxm1023.data.userMember.createdTime = 1775399545291;
+            jeffern.data.userMember.member = true;
+            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberType = 11;
+            jeffern.data.userMember.expireTime = 4079347199000;
+            jeffern.data.userMember.hasBeenMember = true;
+            jeffern.data.userMember.memberStatus = 2;
+            jeffern.data.userMember.createdTime = 1775399545291;
         }
 
         if (url.indexOf("member_type=1") != -1) {
-            chxm1023.data.userMember.member = true;
-            chxm1023.data.userMember.memberClass = 2;
-            chxm1023.data.userMember.memberType = 1;
-            chxm1023.data.userMember.expireTime = 4079347199000;
-            chxm1023.data.userMember.hasBeenMember = true;
-            chxm1023.data.userMember.memberStatus = 2;
-            chxm1023.data.userMember.createdTime = 1775399545291;
+            jeffern.data.userMember.member = true;
+            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberType = 1;
+            jeffern.data.userMember.expireTime = 4079347199000;
+            jeffern.data.userMember.hasBeenMember = true;
+            jeffern.data.userMember.memberStatus = 2;
+            jeffern.data.userMember.createdTime = 1775399545291;
         }
 
         if (url.indexOf("member_type=2") != -1) {
-            chxm1023.data.userMember.member = true;
-            chxm1023.data.userMember.memberClass = 2;
-            chxm1023.data.userMember.memberType = 2;
-            chxm1023.data.userMember.expireTime = 4079347199000;
-            chxm1023.data.userMember.hasBeenMember = true;
-            chxm1023.data.userMember.createdTime = 1775399545291;
+            jeffern.data.userMember.member = true;
+            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberType = 2;
+            jeffern.data.userMember.expireTime = 4079347199000;
+            jeffern.data.userMember.hasBeenMember = true;
+            jeffern.data.userMember.createdTime = 1775399545291;
         }
 
         if (url.indexOf("member_type=4") != -1) {
-            chxm1023.data.userMember.member = true;
-            chxm1023.data.userMember.memberClass = 2;
-            chxm1023.data.userMember.memberType = 4;
-            chxm1023.data.userMember.expireTime = 4079347199000;
-            chxm1023.data.userMember.hasBeenMember = true;
-            chxm1023.data.userMember.createdTime = 1775399545291;
+            jeffern.data.userMember.member = true;
+            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberType = 4;
+            jeffern.data.userMember.expireTime = 4079347199000;
+            jeffern.data.userMember.hasBeenMember = true;
+            jeffern.data.userMember.createdTime = 1775399545291;
         }
     }
 
-    $done({ body: JSON.stringify(chxm1023) });
+    $done({ body: JSON.stringify(jeffern) });
     return;
 }
 
