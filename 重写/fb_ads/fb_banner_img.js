@@ -11,7 +11,7 @@ obj = {
           id: 17868,
           courseSetId: 2,
           content: "上岸",
-          imageUrl: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAESt_9p1GyBeVXt6G48V_egiHweiok-rAAChSUAAuUAAalWXGXHJBcwZCw7BA.jpeg",
+          imageUrl: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAESu5lp1RzmLJ2gsKO4YwW-r3CmoMyJRgAChSoAAuUAAalWcrKx4-R_jgU7BA.png",
           url: "null",
           redirectType: 1,
           ordinal: 8,
