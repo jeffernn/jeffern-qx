@@ -32,6 +32,8 @@ author:jeffern
 ^https?://ke\.fenbi\.com/(iphone|ipad)/v3/user_member/entry\? url reject-dict
 # 屏蔽“我的页面”中的助手入口
 ^https?://market-api\.fenbi\.com/(iphone|ipad)/v1/assistant/my\? url reject-dict
+# 屏蔽题库 Banner 广告（做题页推荐）
+^https?:\/\/keapi\.fenbi\.com\/app\/(iphone|ipad)\/position_resource\/get_tiku_banners.* url reject-dict
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com
 
