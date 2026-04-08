@@ -11,7 +11,7 @@ obj = {
           id: 17868,
           courseSetId: 2,
           content: "上岸小喵",
-          imageUrl: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAESwyFp1jRT4cb_kgrCzULdkDotW7dNlgACDCEAAqcouVa2K3x6mjOUJTsE.jpeg",
+          imageUrl: "https://img.remit.ee/api/file/BQACAgUAAyEGAASHRsPbAAESwy9p1jdV09wqnMNuvKiRom8gIB5aMwACNCEAAqcouVbHmVJSdVnKRzsE.jpeg",
           url: "null",
           redirectType: 1,
           ordinal: 8,
