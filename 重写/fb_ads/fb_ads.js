@@ -190,47 +190,22 @@ if (url.indexOf("/members/my") != -1) {
     $done({ body: JSON.stringify(myMember) });
     return;
 }
-// ===== 精简解析接口（去视频 + 改标题 + 保评论）=====
+// ===== 彻底移除视频模块，只保留评论入口 =====
 if (url.indexOf("/question_episodes_with_multi_type") != -1) {
 
     let obj = JSON.parse(body);
 
     if (obj.data) {
         Object.keys(obj.data).forEach(qid => {
-            let question = obj.data[qid];
 
-            Object.keys(question).forEach(k => {
-                let item = question[k];
-
-                if (item && typeof item === "object") {
-
-                    // ✅ 改标题
-                    item.title = "评论区";
-
-                    // ✅ 评论区开启
-                    item.hideLiveChat = false;
-
-                    // ❌ 去视频（彻底）
-                    item.hasVideo = false;
-                    item.mediaType = 0;
-                    item.type = 0;
-                    item.playStatus = 0;
-                    item.supportReplay = false;
-                    item.supportLive = false;
-
-                    // ❌ 清空视频资源
-                    item.mediaSizes = {};
-                    item.realMediaSizes = {};
-                    item.backgroundVideoUrl = "";
-
-                    // ❌ 精简字段
-                    delete item.teacher;
-                    delete item.materials;
-                    delete item.keynoteId;
-
-                    // ✅ 保留评分（不要删 episodeStat）
+            // ❗直接清空原有结构
+            obj.data[qid] = {
+                "0": {
+                    "title": "评论区",
+                    "hideLiveChat": false
                 }
-            });
+            };
+
         });
     }
 
