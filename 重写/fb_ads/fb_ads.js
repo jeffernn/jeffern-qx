@@ -190,7 +190,7 @@ if (url.indexOf("/members/my") != -1) {
     $done({ body: JSON.stringify(myMember) });
     return;
 }
-// ===== 精简解析接口（保留评论 + 干掉视频 + 保评分）=====
+// ===== 精简解析接口（去视频 + 改标题 + 保评论）=====
 if (url.indexOf("/question_episodes_with_multi_type") != -1) {
 
     let obj = JSON.parse(body);
@@ -204,12 +204,16 @@ if (url.indexOf("/question_episodes_with_multi_type") != -1) {
 
                 if (item && typeof item === "object") {
 
-                    // ✅ 保留评论入口
+                    // ✅ 改标题
+                    item.title = "评论区";
+
+                    // ✅ 评论区开启
                     item.hideLiveChat = false;
 
-                    // ❌ 彻底禁用视频（关键）
+                    // ❌ 去视频（彻底）
                     item.hasVideo = false;
                     item.mediaType = 0;
+                    item.type = 0;
                     item.playStatus = 0;
                     item.supportReplay = false;
                     item.supportLive = false;
@@ -219,12 +223,12 @@ if (url.indexOf("/question_episodes_with_multi_type") != -1) {
                     item.realMediaSizes = {};
                     item.backgroundVideoUrl = "";
 
-                    // ❌ 删除课程信息（可选）
+                    // ❌ 精简字段
                     delete item.teacher;
                     delete item.materials;
                     delete item.keynoteId;
 
-                    // ❗ 不要删 episodeStat（否则评分=0）
+                    // ✅ 保留评分（不要删 episodeStat）
                 }
             });
         });
