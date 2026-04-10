@@ -190,22 +190,46 @@ if (url.indexOf("/members/my") != -1) {
     $done({ body: JSON.stringify(myMember) });
     return;
 }
-// ===== 彻底移除视频模块，只保留评论入口 =====
 if (url.indexOf("/question_episodes_with_multi_type") != -1) {
 
     let obj = JSON.parse(body);
 
     if (obj.data) {
+
         Object.keys(obj.data).forEach(qid => {
+            let question = obj.data[qid];
 
-            // ❗直接清空原有结构
-            obj.data[qid] = {
-                "0": {
-                    "title": "评论区",
-                    "hideLiveChat": false
+            Object.keys(question).forEach(k => {
+                let item = question[k];
+
+                if (!item || typeof item !== "object") return;
+
+                /***********************
+                 * 1️⃣ 保留评分（不要动 episodeStat）
+                 ***********************/
+
+                /***********************
+                 * 2️⃣ 改“标题显示”（正确字段策略）
+                 ***********************/
+                if (item.title !== undefined) item.title = "评论区";
+                if (item.episodeTitle !== undefined) item.episodeTitle = "评论区";
+                if (item.typeName !== undefined) item.typeName = "评论区";
+
+                /***********************
+                 * 3️⃣ 关键：不要删除 episode（否则UI会重建播放器）
+                 * 只“弱化视频标识”
+                 ***********************/
+                if (item.hasVideo !== undefined) item.hasVideo = false;
+                if (item.mediaType !== undefined) item.mediaType = 0;
+
+                /***********************
+                 * 4️⃣ 评论入口（如果存在）
+                 ***********************/
+                if (item.hideLiveChat !== undefined) {
+                    item.hideLiveChat = false;
                 }
-            };
 
+            });
         });
     }
 
