@@ -190,7 +190,7 @@ if (url.indexOf("/members/my") != -1) {
     $done({ body: JSON.stringify(myMember) });
     return;
 }
-// ===== 精简解析接口（保留评论入口）=====
+// ===== 精简解析接口（保留评论 + 干掉视频）=====
 if (url.indexOf("/question_episodes_with_multi_type") != -1) {
 
     let obj = JSON.parse(body);
@@ -204,17 +204,29 @@ if (url.indexOf("/question_episodes_with_multi_type") != -1) {
 
                 if (item && typeof item === "object") {
 
-                    // ✅ 保留评论入口关键字段
-                    let keep = {
-                        hideLiveChat: false, // 强制显示评论区
-                    };
+                    // ✅ 强制开启评论区
+                    item.hideLiveChat = false;
 
-                    // 如果你怕有依赖，可以加这几个
-                    keep.supportLive = item.supportLive;
-                    keep.supportAIInteractive = item.supportAIInteractive;
+                    // ❌ 删除视频/解析相关字段
+                    delete item.hasVideo;
+                    delete item.backgroundVideoUrl;
+                    delete item.mediaSizes;
+                    delete item.realMediaSizes;
+                    delete item.playStatus;
+                    delete item.recordingType;
+                    delete item.duration;
+                    delete item.videoDisplayType;
 
-                    // 🔥 替换整个内容（删除视频等）
-                    question[k] = keep;
+                    // ❌ 删除老师/课程（可选）
+                    delete item.teacher;
+                    delete item.title;
+                    delete item.keynoteId;
+                    delete item.materials;
+
+                    // ❌ 删除统计（可选）
+                    delete item.episodeStat;
+
+                    // ⚠️ 千万不要整对象替换！
                 }
             });
         });
