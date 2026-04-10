@@ -191,24 +191,36 @@ if (url.indexOf("/members/my") != -1) {
     return;
 }
 
-// ===== 新增：强制 hasPermission = true =====
+// ===== hasPermission 全局强制 true（递归版）=====
 if (url.indexOf("/question_episodes_with_multi_type") != -1) {
     try {
         var obj = JSON.parse(body);
 
-        // 常见结构：root 或 data 内
-        if (obj.data && typeof obj.data === "object") {
-            obj.data.hasPermission = true;
+        function walk(node) {
+            if (!node || typeof node !== "object") return;
+
+            if (Array.isArray(node)) {
+                for (var i = 0; i < node.length; i++) {
+                    walk(node[i]);
+                }
+            } else {
+                for (var key in node) {
+                    if (key === "hasPermission") {
+                        node[key] = true;
+                    } else {
+                        walk(node[key]);
+                    }
+                }
+            }
         }
 
-        obj.hasPermission = true;
+        walk(obj);
 
         $done({ body: JSON.stringify(obj) });
     } catch (e) {
-        // 如果解析失败，直接粗暴替换
+        // 兜底：防止非标准 JSON
         body = body.replace(/"hasPermission"\s*:\s*false/g, '"hasPermission":true');
         $done({ body });
     }
     return;
 }
-
