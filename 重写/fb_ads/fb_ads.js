@@ -1,5 +1,5 @@
 /*************************************
-name：fenbi_member
+name：fb
 author:jeffern
 **************************************
 
@@ -37,7 +37,8 @@ author:jeffern
 # 屏蔽试卷分析视频
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/paper_episodes.* url reject-dict
 # 屏蔽试卷单题解析视频只保留文字解析
-^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
+#^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
+^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com
 
@@ -189,3 +190,25 @@ if (url.indexOf("/members/my") != -1) {
     $done({ body: JSON.stringify(myMember) });
     return;
 }
+
+// ===== 新增：强制 hasPermission = true =====
+if (url.indexOf("/question_episodes_with_multi_type") != -1) {
+    try {
+        var obj = JSON.parse(body);
+
+        // 常见结构：root 或 data 内
+        if (obj.data && typeof obj.data === "object") {
+            obj.data.hasPermission = true;
+        }
+
+        obj.hasPermission = true;
+
+        $done({ body: JSON.stringify(obj) });
+    } catch (e) {
+        // 如果解析失败，直接粗暴替换
+        body = body.replace(/"hasPermission"\s*:\s*false/g, '"hasPermission":true');
+        $done({ body });
+    }
+    return;
+}
+
