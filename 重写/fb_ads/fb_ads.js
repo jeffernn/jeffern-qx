@@ -15,7 +15,7 @@ author:jeffern
 # 屏蔽首页顶部/信息流 Banner 广告
 ^https?://keapi\.fenbi\.com/app/(iphone|ipad)/position_resource/get_banners.* url reject-dict
 # 屏蔽“学习助手 / AI 助手”入口信息
-#^https?://market-api\.fenbi\.com/(iphone|ipad)/v1/assistant/info\? url reject-dict
+^https?://market-api\.fenbi\.com/(iphone|ipad)/v1/assistant/info\? url reject-dict
 # 屏蔽首页 Banner（类型 2，一般为推荐广告）
 ^https?://keapi\.fenbi\.com/app/(iphone|ipad)/position_resource/get_home_banners\?.*position_resource_type=2 url reject-dict
 # 屏蔽红点提示（消息 / 活动小红点）
