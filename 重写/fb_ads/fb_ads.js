@@ -7,6 +7,8 @@ author:jeffern
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/user_member\/home.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/members\/detail(\?.*)?$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/members\/my.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
+# 特殊题库用户标识（强制 true）
+^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/privilege_tags\/is_special_tiku_user\?.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 #自定义banner图
 ^https:\/\/keapi\.fenbi\.com\/app\/(iphone|ipad)\/position_resource\/get_home_banners\? url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_banner_img.js
 #屏蔽底部状态栏图片，公开课
@@ -37,7 +39,7 @@ author:jeffern
 # 屏蔽试卷分析视频
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/paper_episodes.* url reject-dict
 # 屏蔽试卷单题解析视频只保留文字解析
-^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
+#^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com
 
@@ -187,5 +189,17 @@ if (url.indexOf("/members/my") != -1) {
     };
 
     $done({ body: JSON.stringify(myMember) });
+    return;
+}
+// ===== 新增 /privilege_tags/is_special_tiku_user =====
+if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
+
+    var obj = JSON.parse(body);
+
+    if (obj && obj.data === false) {
+        obj.data = true;
+    }
+
+    $done({ body: JSON.stringify(obj) });
     return;
 }
