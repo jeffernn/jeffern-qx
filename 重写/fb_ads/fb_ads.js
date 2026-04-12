@@ -54,7 +54,7 @@ if (url.indexOf("/user_member/home") != -1) {
 
         if (url.indexOf("member_type=11") != -1) {
             jeffern.data.userMember.member = true;
-            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberClass = 1;
             jeffern.data.userMember.memberType = 11;
             jeffern.data.userMember.expireTime = 4079347199000;
             jeffern.data.userMember.hasBeenMember = true;
@@ -64,7 +64,7 @@ if (url.indexOf("/user_member/home") != -1) {
 
         if (url.indexOf("member_type=1") != -1) {
             jeffern.data.userMember.member = true;
-            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberClass = 1;
             jeffern.data.userMember.memberType = 1;
             jeffern.data.userMember.expireTime = 4079347199000;
             jeffern.data.userMember.hasBeenMember = true;
@@ -74,7 +74,7 @@ if (url.indexOf("/user_member/home") != -1) {
 
         if (url.indexOf("member_type=2") != -1) {
             jeffern.data.userMember.member = true;
-            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberClass = 1;
             jeffern.data.userMember.memberType = 2;
             jeffern.data.userMember.expireTime = 4079347199000;
             jeffern.data.userMember.hasBeenMember = true;
@@ -83,7 +83,7 @@ if (url.indexOf("/user_member/home") != -1) {
 
         if (url.indexOf("member_type=4") != -1) {
             jeffern.data.userMember.member = true;
-            jeffern.data.userMember.memberClass = 2;
+            jeffern.data.userMember.memberClass = 1;
             jeffern.data.userMember.memberType = 4;
             jeffern.data.userMember.expireTime = 4079347199000;
             jeffern.data.userMember.hasBeenMember = true;
@@ -103,7 +103,7 @@ if (url.indexOf("/members/detail") != -1) {
                 "msg": "",
                 "data": {
                     "member": true,
-                    "memberClass": 2,
+                    "memberClass": 1,
                     "memberType": 2,
                     "expireTime": 4079347199000,
                     "hasBeenMember": true,
@@ -123,7 +123,7 @@ if (url.indexOf("/members/detail") != -1) {
                 "msg": "",
                 "data": {
                     "member": true,
-                    "memberClass": 2,
+                    "memberClass": 1,
                     "memberType": 1,
                     "expireTime": 4079347199000,
                     "hasBeenMember": true,
@@ -143,7 +143,7 @@ if (url.indexOf("/members/detail") != -1) {
                 "msg": "",
                 "data": {
                     "member": true,
-                    "memberClass": 2,
+                    "memberClass": 1,
                     "memberType": 4,
                     "expireTime": 4079347199000,
                     "hasBeenMember": true,
@@ -163,7 +163,7 @@ if (url.indexOf("/members/detail") != -1) {
                 "msg": "",
                 "data": {
                     "member": true,
-                    "memberClass": 2,
+                    "memberClass": 1,
                     "memberType": 11,
                     "expireTime": 4079347199000,
                     "hasBeenMember": true,
