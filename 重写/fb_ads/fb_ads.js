@@ -228,9 +228,13 @@ if (url.includes("/course/module/config")) {
     let obj = JSON.parse(body);
 
     // 处理 users
-    if (Array.isArray(obj.users)) {
-        obj.users = obj.users.filter(item => item.type !== "week");
-    }
+if (Array.isArray(obj.users)) {
+    obj.users = obj.users.filter(item =>
+        item.type !== "week" &&
+        item.type !== "u_one_by_one" &&
+        item.type !== "u_one_by_one_system"
+    );
+}
 
     // 处理 cover
     const removeTypes = [
@@ -244,9 +248,9 @@ if (url.includes("/course/module/config")) {
         "one_by_one"
         "offline_study_room"
         "vip_perfect"
-        "class_group"
-        "class_group"
-        "class_group"
+        "standardword"
+        "ai_writing_coach"
+        "manual_rule"
         "class_group"
         "class_group"
         "class_group"
