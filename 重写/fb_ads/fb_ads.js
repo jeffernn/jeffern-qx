@@ -44,7 +44,7 @@ time:2026.4.18
 #屏蔽考点显示
 ^https:\/\/tiku\.fenbi\.com\/combine\/static\/solution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 [mitm]
-hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com
+hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com, tiku.fenbi.com
 
 *************************************/
 
