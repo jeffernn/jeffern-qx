@@ -227,16 +227,16 @@ if (url.includes("/course/module/config")) {
 
     let obj = JSON.parse(body);
 
-    // 处理 users
-if (Array.isArray(obj.users)) {
-    obj.users = obj.users.filter(item =>
-        item.type !== "week" &&
-        item.type !== "u_one_by_one" &&
-        item.type !== "u_one_by_one_system"
-    );
-}
+    // users
+    if (Array.isArray(obj.users)) {
+        obj.users = obj.users.filter(item =>
+            item.type !== "week" &&
+            item.type !== "u_one_by_one" &&
+            item.type !== "u_one_by_one_system"
+        );
+    }
 
-    // 处理 cover
+    // cover
     const removeTypes = [
         "jixian_exercise",
         "free_information",
@@ -245,12 +245,12 @@ if (Array.isArray(obj.users)) {
         "high_quality_server",
         "daily",
         "basictraining",
-        "one_by_one"
-        "offline_study_room"
-        "vip_perfect"
-        "standardword"
-        "ai_writing_coach"
-        "manual_rule"   
+        "one_by_one",
+        "offline_study_room",
+        "vip_perfect",
+        "standardword",
+        "ai_writing_coach",
+        "manual_rule"
     ];
 
     if (Array.isArray(obj.cover)) {
