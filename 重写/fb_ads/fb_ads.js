@@ -208,44 +208,10 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
 }
 
 // ===== 屏蔽试卷考点=====
-if (url.indexOf("/combine/static/solution") !== -1) {
+if ($request.url.includes("/combine/static/solution")) {
 
-    let obj = JSON.parse(body);
+    // 删除整个 keypoints 字段
+    body = body.replace(/"keypoints"\s*:\s*\[[\s\S]*?\]\s*,?/g, "");
 
-    function removeFromArray(arr) {
-        if (!Array.isArray(arr)) return;
-
-        arr.forEach(item => {
-            if (item && typeof item === "object") {
-
-                // 只删这一层
-                if (item.keypoints) {
-                    delete item.keypoints;
-                }
-
-                // 继续找下一层数组（关键）
-                Object.keys(item).forEach(k => {
-                    if (Array.isArray(item[k])) {
-                        removeFromArray(item[k]);
-                    }
-                });
-            }
-        });
-    }
-
-    // 从 data 开始找
-    if (obj.data) {
-        if (Array.isArray(obj.data)) {
-            removeFromArray(obj.data);
-        } else {
-            Object.keys(obj.data).forEach(k => {
-                if (Array.isArray(obj.data[k])) {
-                    removeFromArray(obj.data[k]);
-                }
-            });
-        }
-    }
-
-    $done({ body: JSON.stringify(obj) });
-    return;
+    $done({ body });
 }
