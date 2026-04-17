@@ -212,13 +212,38 @@ if (url.indexOf("/combine/static/solution") !== -1) {
 
     let obj = JSON.parse(body);
 
-    // 关键：data 是数组
-    if (obj.data && Array.isArray(obj.data)) {
-        obj.data.forEach(item => {
-            if (item.keypoints) {
-                delete item.keypoints;
+    function removeFromArray(arr) {
+        if (!Array.isArray(arr)) return;
+
+        arr.forEach(item => {
+            if (item && typeof item === "object") {
+
+                // 只删这一层
+                if (item.keypoints) {
+                    delete item.keypoints;
+                }
+
+                // 继续找下一层数组（关键）
+                Object.keys(item).forEach(k => {
+                    if (Array.isArray(item[k])) {
+                        removeFromArray(item[k]);
+                    }
+                });
             }
         });
+    }
+
+    // 从 data 开始找
+    if (obj.data) {
+        if (Array.isArray(obj.data)) {
+            removeFromArray(obj.data);
+        } else {
+            Object.keys(obj.data).forEach(k => {
+                if (Array.isArray(obj.data[k])) {
+                    removeFromArray(obj.data[k]);
+                }
+            });
+        }
     }
 
     $done({ body: JSON.stringify(obj) });
