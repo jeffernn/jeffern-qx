@@ -207,19 +207,18 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
     return;
 }
 
-// ===== 屏蔽试卷考点（solution接口）=====
+// ===== 屏蔽试卷考点=====
 if (url.indexOf("/combine/static/solution") !== -1) {
 
     let obj = JSON.parse(body);
 
-    delete obj.keypoints;
-
-    if (obj.data) {
-        delete obj.data.keypoints;
-
-        if (obj.data.solution) {
-            delete obj.data.solution.keypoints;
-        }
+    // 关键：data 是数组
+    if (obj.data && Array.isArray(obj.data)) {
+        obj.data.forEach(item => {
+            if (item.keypoints) {
+                delete item.keypoints;
+            }
+        });
     }
 
     $done({ body: JSON.stringify(obj) });
