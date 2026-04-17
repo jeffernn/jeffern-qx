@@ -250,7 +250,8 @@ if (url.includes("/course/module/config")) {
         "vip_perfect",
         "standardword",
         "ai_writing_coach",
-        "manual_rule"
+        "manual_rule",
+        "class_group"
     ];
 
     if (Array.isArray(obj.cover)) {
