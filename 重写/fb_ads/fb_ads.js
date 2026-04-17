@@ -1,6 +1,7 @@
 /*************************************
 name：fb
 author:jeffern
+time:2026.4.18
 **************************************
 
 [rewrite_local]
@@ -40,6 +41,8 @@ author:jeffern
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/paper_episodes.* url reject-dict
 # 屏蔽试卷单题解析视频只保留文字解析
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
+#屏蔽考点显示
+^https:\/\/tiku\.fenbi\.com\/combine\/static\/solution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com
 
@@ -158,7 +161,7 @@ if (url.indexOf("/members/detail") != -1) {
         return;
     }
 
-    // syzc（默认）
+    // 职测
     if (url.indexOf("tiku_prefix=syzc") != -1) {
         $done({
             body: JSON.stringify({
@@ -203,3 +206,20 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
     $done({ body: JSON.stringify(obj) });
     return;
 }
+
+//屏蔽试卷中的考点
+function removeKey(obj) {
+  if (Array.isArray(obj)) {
+    obj.forEach(removeKey);
+  } else if (obj !== null && typeof obj === "object") {
+    delete obj.keypoints;
+    Object.keys(obj).forEach(key => {
+      removeKey(obj[key]);
+    });
+  }
+}
+
+let obj = JSON.parse($response.body);
+removeKey(obj);
+
+$done({ body: JSON.stringify(obj) });
