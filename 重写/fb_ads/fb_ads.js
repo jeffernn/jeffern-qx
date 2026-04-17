@@ -208,10 +208,17 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
 }
 
 // ===== 屏蔽试卷考点=====
-if ($request.url.includes("/combine/static/solution")) {
+// ===== 屏蔽考点（solution接口）=====
+if (url.includes("/combine/static/solution")) {
 
-    // 删除整个 keypoints 字段
-    body = body.replace(/"keypoints"\s*:\s*\[[\s\S]*?\]\s*,?/g, "");
+    let bodyStr = body;
 
-    $done({ body });
+    // 同时兼容两种写法（有无引号）
+    bodyStr = bodyStr.replace(
+        /"?keypoints"?\s*:\s*\[[\s\S]*?\]\s*,?/g,
+        ""
+    );
+
+    $done({ body: bodyStr });
+    return;
 }
