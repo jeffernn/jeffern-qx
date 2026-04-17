@@ -207,22 +207,20 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
     return;
 }
 
-// ===== 屏蔽考点（solution接口）=====
+// ===== 屏蔽试卷考点（solution接口）=====
 if (url.indexOf("/combine/static/solution") !== -1) {
 
-    function removeKey(obj) {
-        if (Array.isArray(obj)) {
-            obj.forEach(removeKey);
-        } else if (obj !== null && typeof obj === "object") {
-            delete obj.keypoints;
-            Object.keys(obj).forEach(key => {
-                removeKey(obj[key]);
-            });
+    let obj = JSON.parse(body);
+
+    delete obj.keypoints;
+
+    if (obj.data) {
+        delete obj.data.keypoints;
+
+        if (obj.data.solution) {
+            delete obj.data.solution.keypoints;
         }
     }
-
-    let obj = JSON.parse(body);
-    removeKey(obj);
 
     $done({ body: JSON.stringify(obj) });
     return;
