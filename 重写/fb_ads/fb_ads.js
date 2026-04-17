@@ -207,13 +207,11 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
     return;
 }
 
-// ===== 屏蔽试卷考点=====
-// ===== 屏蔽考点（solution接口）=====
+// ===== 屏蔽试卷考点 =====
 if (url.includes("/combine/static/solution")) {
 
     let bodyStr = body;
 
-    // 同时兼容两种写法（有无引号）
     bodyStr = bodyStr.replace(
         /"?keypoints"?\s*:\s*\[[\s\S]*?\]\s*,?/g,
         ""
