@@ -241,7 +241,16 @@ if (url.includes("/course/module/config")) {
         "high_quality_server",
         "daily",
         "basictraining",
+        "one_by_one"
+        "offline_study_room"
+        "vip_perfect"
         "class_group"
+        "class_group"
+        "class_group"
+        "class_group"
+        "class_group"
+        "class_group"
+        "class_group"    
     ];
 
     if (Array.isArray(obj.cover)) {
