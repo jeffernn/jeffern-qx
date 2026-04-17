@@ -250,11 +250,7 @@ if (Array.isArray(obj.users)) {
         "vip_perfect"
         "standardword"
         "ai_writing_coach"
-        "manual_rule"
-        "class_group"
-        "class_group"
-        "class_group"
-        "class_group"    
+        "manual_rule"   
     ];
 
     if (Array.isArray(obj.cover)) {
