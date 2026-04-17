@@ -207,19 +207,23 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
     return;
 }
 
-//屏蔽试卷中的考点
-function removeKey(obj) {
-  if (Array.isArray(obj)) {
-    obj.forEach(removeKey);
-  } else if (obj !== null && typeof obj === "object") {
-    delete obj.keypoints;
-    Object.keys(obj).forEach(key => {
-      removeKey(obj[key]);
-    });
-  }
+// ===== 屏蔽考点（solution接口）=====
+if (url.indexOf("/combine/static/solution") !== -1) {
+
+    function removeKey(obj) {
+        if (Array.isArray(obj)) {
+            obj.forEach(removeKey);
+        } else if (obj !== null && typeof obj === "object") {
+            delete obj.keypoints;
+            Object.keys(obj).forEach(key => {
+                removeKey(obj[key]);
+            });
+        }
+    }
+
+    let obj = JSON.parse(body);
+    removeKey(obj);
+
+    $done({ body: JSON.stringify(obj) });
+    return;
 }
-
-let obj = JSON.parse($response.body);
-removeKey(obj);
-
-$done({ body: JSON.stringify(obj) });
