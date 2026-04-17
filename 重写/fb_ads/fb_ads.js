@@ -43,6 +43,8 @@ time:2026.4.18
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
 #屏蔽考点显示
 ^https:\/\/tiku\.fenbi\.com\/combine\/static\/solution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
+# 移除主页无用及其会员小功能
+^https:\/\/tiku\.fenbi\.com\/iphone\/syzc\/course\/module\/config\/v2.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com, tiku.fenbi.com
 
@@ -218,5 +220,34 @@ if (url.includes("/combine/static/solution")) {
     );
 
     $done({ body: bodyStr });
+    return;
+}
+// ===== 移除主页无用及其会员小功能 =====
+if (url.includes("/course/module/config")) {
+
+    let obj = JSON.parse(body);
+
+    // 处理 users
+    if (Array.isArray(obj.users)) {
+        obj.users = obj.users.filter(item => item.type !== "week");
+    }
+
+    // 处理 cover
+    const removeTypes = [
+        "jixian_exercise",
+        "free_information",
+        "vip",
+        "high_quality_class",
+        "high_quality_server",
+        "daily",
+        "basictraining",
+        "class_group"
+    ];
+
+    if (Array.isArray(obj.cover)) {
+        obj.cover = obj.cover.filter(item => !removeTypes.includes(item.type));
+    }
+
+    $done({ body: JSON.stringify(obj) });
     return;
 }
