@@ -29,7 +29,7 @@ declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻
 ^https?://ke\.fenbi\.com/(iphone|ipad)/v3/timetable/today_with_public_episodes\? url reject-dict
 # 屏蔽首页热门搜索词
 ^https?://hera-webapp\.fenbi\.com/(iphone|ipad)/topic/hotquery/list\? url reject-dict
-# 屏蔽探索页常量配置（常用于活动入口）
+# 屏蔽探索页常量配置（活动入口）
 ^https?://hera-webapp\.fenbi\.com/(iphone|ipad)/explore/consts\? url reject-dict
 # 屏蔽公告页热门搜索
 ^https?://hera-webapp\.fenbi\.com/(iphone|ipad)/announcement/hotquery/list\? url reject-dict
@@ -45,7 +45,7 @@ declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
 # 屏蔽试卷考点模块显示
 ^https:\/\/tiku\.fenbi\.com\/combine\/static\/solution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
-# 移除主页无用及其会员功能入口
+# 移除主页中会员才可用的小功能入口
 ^https:\/\/tiku\.fenbi\.com\/(iphone|ipad)\/(syzc|xingce|shenlun|sydw)\/course\/module\/config\/v2.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 # 屏蔽试卷 AI 错题数据接口
 ^https:\/\/tiku\.fenbi\.com\/combine\/ai\/wrong\/question\/data.* url reject-dict
@@ -215,7 +215,7 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
     return;
 }
 
-// ===== 屏蔽试卷考点模块显示 =====
+// ===== 移除试卷解析中考点模块 =====
 if (url.includes("/combine/static/solution")) {
 
     let bodyStr = body;
@@ -228,7 +228,7 @@ if (url.includes("/combine/static/solution")) {
     $done({ body: bodyStr });
     return;
 }
-// ===== 移除主页无用及其会员功能入口 =====
+// ===== 移除主页中会员才可用的小功能入口 =====
 if (url.includes("/course/module/config")) {
 
     let obj = JSON.parse(body);
@@ -237,6 +237,7 @@ if (url.includes("/course/module/config")) {
         obj.users = obj.users.filter(item =>
             item.type !== "week" &&
             item.type !== "u_one_by_one" &&
+            item.type !== "u_note" &&
             item.type !== "u_one_by_one_system"
         );
     }
@@ -265,7 +266,7 @@ if (url.includes("/course/module/config")) {
     $done({ body: JSON.stringify(obj) });
     return;
 }
-// ===== 移除“笔记”入口 =====
+// ===== 移除“试卷解析添加笔记”模块 =====
 if (url.includes("/combine/exercise/getSolution")) {
 
     let obj = JSON.parse(body);
