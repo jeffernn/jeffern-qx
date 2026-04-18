@@ -45,6 +45,8 @@ time:2026.4.18
 ^https:\/\/tiku\.fenbi\.com\/combine\/static\/solution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 # 移除主页无用及其会员小功能
 ^https:\/\/tiku\.fenbi\.com\/(iphone|ipad)\/(syzc|xingce|shenlun|sydw)\/course\/module\/config\/v2.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
+# 屏蔽 AI 错题数据接口
+^https:\/\/tiku\.fenbi\.com\/combine\/ai\/wrong\/question\/data.* url reject-dict
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com, tiku.fenbi.com
 
