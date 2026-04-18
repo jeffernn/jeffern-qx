@@ -1,18 +1,20 @@
 /*************************************
-name：fb
+name：mlfk
 author:jeffern
 time:2026.4.18
+declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻下线，仅用于个人学习，手下留情
 **************************************
 
 [rewrite_local]
+# 没啥用的假装会员
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/user_member\/home.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/members\/detail(\?.*)?$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/members\/my.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
-# 特殊题库用户标识（强制 true）
+# 允许用户使用特殊题库
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/privilege_tags\/is_special_tiku_user\?.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
-#自定义banner图
+# 自定义首页的横幅
 ^https:\/\/keapi\.fenbi\.com\/app\/(iphone|ipad)\/position_resource\/get_home_banners\? url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_banner_img.js
-#屏蔽底部状态栏图片，公开课
+# 屏蔽底部状态栏图片，公开课
 ^https:\/\/hera-webapp\.fenbi\.com\/(iphone|ipad)\/recommend\/info\? url jsonjq-response-body 'delpaths([["data","rollingBanner"]])'
 ^https:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/apps\/config\? url jsonjq-response-body 'delpaths([["data","bottomIconInfos","position","iconDefaultUrl"],["data","bottomIconInfos","position","iconSelectedUrl"],["data","bottomIconInfos","position","nightModeIconDefaultUrl"],["data","bottomIconInfos","position","nightModeIconSelectedUrl"]])'
 # 屏蔽首页顶部/信息流 Banner 广告
@@ -35,18 +37,20 @@ time:2026.4.18
 ^https?://ke\.fenbi\.com/(iphone|ipad)/v3/user_member/entry\? url reject-dict
 # 屏蔽“我的页面”中的助手入口
 ^https?://market-api\.fenbi\.com/(iphone|ipad)/v1/assistant/my\? url reject-dict
-# 屏蔽题库 Banner 广告（分析页的Ai教学班广告推荐）
+# 屏蔽试卷分析页的Ai教学班广告
 ^https?:\/\/keapi\.fenbi\.com\/app\/(iphone|ipad)\/position_resource\/get_tiku_banners.* url reject-dict
-# 屏蔽试卷分析视频
+# 屏蔽试卷整体分析视频
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/paper_episodes.* url reject-dict
-# 屏蔽试卷单题解析视频只保留文字解析
+# 屏蔽试卷题目视频解析
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
-#屏蔽考点显示
+# 屏蔽试卷考点模块显示
 ^https:\/\/tiku\.fenbi\.com\/combine\/static\/solution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
-# 移除主页无用及其会员小功能
+# 移除主页无用及其会员功能入口
 ^https:\/\/tiku\.fenbi\.com\/(iphone|ipad)\/(syzc|xingce|shenlun|sydw)\/course\/module\/config\/v2.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
-# 屏蔽 AI 错题数据接口
+# 屏蔽试卷 AI 错题数据接口
 ^https:\/\/tiku\.fenbi\.com\/combine\/ai\/wrong\/question\/data.* url reject-dict
+# 移除试卷解析中的“笔记”功能
+^https:\/\/tiku\.fenbi\.com\/combine\/exercise\/getSolution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com, tiku.fenbi.com
 
@@ -55,7 +59,7 @@ hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenb
 var body = $response.body;
 var url = $request.url;
 
-// ===== /user_member/home =====
+// ===== 没啥用接口 =====
 if (url.indexOf("/user_member/home") != -1) {
     var jeffern = JSON.parse(body);
 
@@ -186,7 +190,7 @@ if (url.indexOf("/members/detail") != -1) {
     }
 }
 
-// ===== 新增 /members/my =====
+// ===== 没啥用接口 =====
 if (url.indexOf("/members/my") != -1) {
 
     var myMember = {
@@ -198,7 +202,7 @@ if (url.indexOf("/members/my") != -1) {
     $done({ body: JSON.stringify(myMember) });
     return;
 }
-// ===== 新增 /privilege_tags/is_special_tiku_user =====
+// ===== 解锁特殊题库 =====
 if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
 
     var obj = JSON.parse(body);
@@ -211,7 +215,7 @@ if (url.indexOf("/privilege_tags/is_special_tiku_user") != -1) {
     return;
 }
 
-// ===== 屏蔽试卷考点 =====
+// ===== 屏蔽试卷考点模块显示 =====
 if (url.includes("/combine/static/solution")) {
 
     let bodyStr = body;
@@ -224,12 +228,11 @@ if (url.includes("/combine/static/solution")) {
     $done({ body: bodyStr });
     return;
 }
-// ===== 移除主页无用及其会员小功能 =====
+// ===== 移除主页无用及其会员功能入口 =====
 if (url.includes("/course/module/config")) {
 
     let obj = JSON.parse(body);
 
-    // users
     if (Array.isArray(obj.users)) {
         obj.users = obj.users.filter(item =>
             item.type !== "week" &&
@@ -238,7 +241,6 @@ if (url.includes("/course/module/config")) {
         );
     }
 
-    // cover
     const removeTypes = [
         "jixian_exercise",
         "free_information",
@@ -259,6 +261,22 @@ if (url.includes("/course/module/config")) {
     if (Array.isArray(obj.cover)) {
         obj.cover = obj.cover.filter(item => !removeTypes.includes(item.type));
     }
+
+    $done({ body: JSON.stringify(obj) });
+    return;
+}
+// ===== 移除“笔记”入口 =====
+if (url.includes("/combine/exercise/getSolution")) {
+
+    let obj = JSON.parse(body);
+
+    try {
+        let flags = obj?.data?.switchVO?.flags;
+
+        if (Array.isArray(flags)) {
+            obj.data.switchVO.flags = flags.filter(f => f !== "note");
+        }
+    } catch (e) {}
 
     $done({ body: JSON.stringify(obj) });
     return;
