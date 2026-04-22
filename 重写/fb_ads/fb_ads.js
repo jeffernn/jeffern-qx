@@ -1,8 +1,8 @@
 /*************************************
 name：mlfk
 author:jeffern
-time:2026.4.18
-declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻下线，仅用于个人学习，手下留情
+time:2026.4.22
+declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻下线，仅用于个人学习，手下留情，传播或者贩卖包考不上！
 **************************************
 
 [rewrite_local]
@@ -12,18 +12,18 @@ declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/members\/my.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 # 允许用户使用特殊题库
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/privilege_tags\/is_special_tiku_user\?.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
-# 自定义首页的横幅
+# 自定义首页的横幅图片
 ^https:\/\/keapi\.fenbi\.com\/app\/(iphone|ipad)\/position_resource\/get_home_banners\? url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_banner_img.js
-# 屏蔽底部状态栏图片，公开课
+# 屏蔽底部状态栏图片和公开课
 ^https:\/\/hera-webapp\.fenbi\.com\/(iphone|ipad)\/recommend\/info\? url jsonjq-response-body 'delpaths([["data","rollingBanner"]])'
 ^https:\/\/ke\.fenbi\.com\/(iphone|ipad)\/v3\/apps\/config\? url jsonjq-response-body 'delpaths([["data","bottomIconInfos","position","iconDefaultUrl"],["data","bottomIconInfos","position","iconSelectedUrl"],["data","bottomIconInfos","position","nightModeIconDefaultUrl"],["data","bottomIconInfos","position","nightModeIconSelectedUrl"]])'
-# 屏蔽首页顶部/信息流 Banner 广告
+# 屏蔽首页顶部/信息流拉动广告
 ^https?://keapi\.fenbi\.com/app/(iphone|ipad)/position_resource/get_banners.* url reject-dict
-# 屏蔽“学习助手 / AI 助手”入口信息
+# 屏蔽“学习助手 / AI 助手”入口
 ^https?://market-api\.fenbi\.com/(iphone|ipad)/v1/assistant/info\? url reject-dict
 # 屏蔽首页 Banner（类型 2，一般为推荐广告）
 ^https?://keapi\.fenbi\.com/app/(iphone|ipad)/position_resource/get_home_banners\?.*position_resource_type=2 url reject-dict
-# 屏蔽红点提示（消息 / 活动小红点）
+# 屏蔽小红点提示（消息/活动的小红点）
 ^https?://keapi\.fenbi\.com/app/(iphone|ipad)/\w+/reddot\? url reject-dict
 # 屏蔽“今日课程 / 公共课推荐”
 ^https?://ke\.fenbi\.com/(iphone|ipad)/v3/timetable/today_with_public_episodes\? url reject-dict
@@ -37,9 +37,9 @@ declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻
 ^https?://ke\.fenbi\.com/(iphone|ipad)/v3/user_member/entry\? url reject-dict
 # 屏蔽“我的页面”中的助手入口
 ^https?://market-api\.fenbi\.com/(iphone|ipad)/v1/assistant/my\? url reject-dict
-# 屏蔽试卷分析页的Ai教学班广告
+# 屏蔽试卷分析页的AI教学班广告
 ^https?:\/\/keapi\.fenbi\.com\/app\/(iphone|ipad)\/position_resource\/get_tiku_banners.* url reject-dict
-# 屏蔽试卷整体分析视频
+# 屏蔽试卷分析页试卷分析视频
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/paper_episodes.* url reject-dict
 # 屏蔽试卷题目视频解析
 ^https?:\/\/ke\.fenbi\.com\/(iphone|ipad)\/\w+\/v3\/episodes\/question_episodes_with_multi_type.* url reject-dict
