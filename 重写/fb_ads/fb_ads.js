@@ -51,6 +51,8 @@ declare:别乱搞，自用，不可传播，不可商用，官方通知将立刻
 ^https:\/\/tiku\.fenbi\.com\/combine\/ai\/wrong\/question\/data.* url reject-dict
 # 移除试卷解析中的“笔记”功能
 ^https:\/\/tiku\.fenbi\.com\/combine\/exercise\/getSolution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
+# 移除考点解析中的“笔记”功能（keypoint接口）
+^https:\/\/tiku\.fenbi\.com\/combine\/keypoint\/getPageSolution.* url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/fb_ads/fb_ads.js
 [mitm]
 hostname = keapi.fenbi.com, market-api.fenbi.com, ke.fenbi.com, hera-webapp.fenbi.com, tiku.fenbi.com
 
@@ -276,6 +278,22 @@ if (url.includes("/combine/exercise/getSolution")) {
 
         if (Array.isArray(flags)) {
             obj.data.switchVO.flags = flags.filter(f => f !== "note");
+        }
+    } catch (e) {}
+
+    $done({ body: JSON.stringify(obj) });
+    return;
+}
+// ===== 移除“考点解析接口 note 标记” =====
+if (url.includes("/combine/keypoint/getPageSolution")) {
+
+    let obj = JSON.parse(body);
+
+    try {
+        let flags = obj?.data?.flags;
+
+        if (Array.isArray(flags)) {
+            obj.data.flags = flags.filter(f => f !== "note");
         }
     } catch (e) {}
 
