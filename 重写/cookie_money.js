@@ -3,8 +3,8 @@
 Cookie记账：https://apps.apple.com/app/id1559943673
 
 [rewrite_local]
-^https?:\/\/api\.revenuecat\.com\/v1\/(subscribers(?:\/[^\/]*)?|receipts)$ url script-response-body https://raw.githubusercontent.com/Guding88/Script/main/Cookiejizhang.js
-^https?:\/\/api\.revenuecat\.com\/v1\/(subscribers(?:\/[^\/]*)?|receipts)$ url script-request-header https://raw.githubusercontent.com/Guding88/Script/main/Cookiejizhang.js
+^https?:\/\/api\.revenuecat\.com\/v1\/(subscribers(?:\/[^\/]*)?|receipts)$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money.js
+^https?:\/\/api\.revenuecat\.com\/v1\/(subscribers(?:\/[^\/]*)?|receipts)$ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money.js
 
 [MITM]
 hostname = api.revenuecat.com
