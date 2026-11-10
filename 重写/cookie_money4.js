@@ -1,7 +1,7 @@
 /*
 [rewrite_local]
-^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money3.js
-^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money3.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money4.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money4.js
 
 [MITM]
 hostname = api.revenuecat.com, api.rc-backup.com
@@ -12,7 +12,7 @@ const PRODUCT_ID          = "app.ft.Bookkeeping.lifetime";
 const ENTITLEMENT_NAME    = "allaccess";
 const APP_STORE_MGMT_URL  = "https://apps.apple.com/account/subscriptions";
 
-// lifetime 商品:expires_date 用 null
+// ★ lifetime:expires_date 必须为 null(RevenueCat 真值)
 const EXPIRES_DATE = null;
 
 // ================= 请求头阶段 =================
@@ -34,7 +34,8 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
 const url = ($request.url || "").split("?")[0];
 console.log("[RC][RESP] url =", url);
 
-// 时间戳:秒对齐 + 去 .302Z 毫秒后缀(部分 ISO8601 解析器会 fail)
+// ★ 时间使用设备当前系统时间,且秒级对齐、不带毫秒
+// 前提: 你设备时间必须是真实当前时间(自动设置)
 const nowMs  = Math.floor(Date.now() / 1000) * 1000;
 const nowIso = new Date(nowMs).toISOString().replace(/\.\d{3}Z$/, "Z");
 
@@ -46,7 +47,7 @@ const data = {
   store:                  "app_store"
 };
 
-// -------- /offerings 分支 --------
+// -------- /offerings --------
 if (/\/offerings$/.test(url)) {
   const offerBody = {
     request_date:    nowIso,
@@ -75,7 +76,7 @@ if (/\/offerings$/.test(url)) {
   return;
 }
 
-// -------- /v1/me 分支 --------
+// -------- /v1/me --------
 if (/\/v1\/me$/.test(url)) {
   console.log("[RC][RESP] me 分支");
   $done({
@@ -89,7 +90,7 @@ if (/\/v1\/me$/.test(url)) {
   return;
 }
 
-// -------- /subscribers 分支 --------
+// -------- /subscribers --------
 const appUserId = DEFAULT_APP_USER_ID;
 
 const fake = {
@@ -100,9 +101,9 @@ const fake = {
   subscriber: {
     original_app_user_id:     appUserId,
     original_purchase_date:   data.original_purchase_date,
-    first_seen:               "2023-02-23T02:33:35Z",    // ★ 比 purchase_date 晚 2 秒,避免 first_seen <= purchase 严格校验失败
+    first_seen:               "2023-02-23T02:33:35Z",          // ★ 晚 2 秒于 purchase
     last_seen:                nowIso,
-    management_url:           APP_STORE_MGMT_URL,        // ★ null → 真商店管理链接
+    management_url:           APP_STORE_MGMT_URL,              // ★ 真实商店管理链接
     original_application_version: "1.0",
     entitlements: {
       [ENTITLEMENT_NAME]: {
@@ -111,7 +112,7 @@ const fake = {
         ownership_type:         data.ownership_type,
         original_purchase_date: data.original_purchase_date,
         product_identifier:     PRODUCT_ID,
-        expires_date:           data.expires_date
+        expires_date:           data.expires_date             // ← null
       }
     },
     subscriptions: {
@@ -120,7 +121,7 @@ const fake = {
         purchase_date:          data.purchase_date,
         ownership_type:         data.ownership_type,
         original_purchase_date: data.original_purchase_date,
-        expires_date:           data.expires_date
+        expires_date:           data.expires_date             // ← null
       }
     },
     other_purchases:   {},
