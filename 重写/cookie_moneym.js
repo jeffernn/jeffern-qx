@@ -1,29 +1,40 @@
 /*
 [rewrite_local]
-^https:\/\/api\.revenuecat\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneypppp.js
-^https:\/\/api\.revenuecat\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneypppp.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneym.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneym.js
 
-[mitm]
-hostname = api.revenuecat.com
+[MITM]
+hostname = api.revenuecat.com, api.rc-backup.com
 */
 
-// ===== 请求头阶段: $response 不存在或空 =====
-if (typeof $response === "undefined" || Object.keys($response).length === 0) {
+const UA = ($request.headers && $request.headers["user-agent"]) || "";
 
-  // 去掉 ETag,尽量让服务端返新数据
+// ========== 请求头阶段 ==========
+if (typeof $response === "undefined") {
   delete $request.headers["x-revenuecat-etag"];
   delete $request.headers["X-RevenueCat-ETag"];
+  $done({ headers: $request.headers });
+}
 
-  $done({
-    headers: $request.headers
-  });
-
-
-// ===== 响应体阶段 =====
-} else {
-
+// ========== 响应体阶段 ==========
+else {
   const nowMs  = Date.now();
   const nowIso = new Date(nowMs).toISOString();
+
+  // 从 URL 提取 app_user_id
+  let appUserId = "fake";
+  const m = ($request.url || "").match(/\/v1\/subscribers\/([^\/?]+)/);
+  if (m && m[1]) appUserId = m[1];
+
+  // 尝试从原响应捞 app_user_id / request_date(解析失败没关系,继续伪造)
+  let requestDate = nowIso;
+  try {
+    const o = JSON.parse($response.body || "null");
+    if (o && typeof o === "object") {
+      requestDate = o.request_date || nowIso;
+      if (o.original_app_user_id) appUserId = o.original_app_user_id;
+    }
+  } catch (e) {}
 
   const data = {
     expires_date:           "6666-06-06T06:06:06Z",
@@ -33,25 +44,7 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
     store:                  "app_store"
   };
 
-  // 从 URL 提取 app_user_id(如果有)
-  let appUserId = "fake";
-  try {
-    const m = ($request.url || "").match(/\/v1\/subscribers\/([^\/?]+)/);
-    if (m && m[1]) appUserId = m[1];
-  } catch (e) {}
-
-  // 尝试从原响应捞 app_user_id
-  let requestDate = nowIso;
-  try {
-    const origin = JSON.parse($response.body || "null");
-    if (origin && typeof origin === "object") {
-      requestDate = origin.request_date || nowIso;
-      if (origin.original_app_user_id) appUserId = origin.original_app_user_id;
-      else if (origin.last_seen_app_user_id) appUserId = origin.last_seen_app_user_id;
-    }
-  } catch (e) {}
-
-  // 无条件构造"已订阅"响应
+  // 无论原响应是什么(200 / 404 / 空 / HTML),都无条件返回同一份已订阅结构
   const fake = {
     request_date:          requestDate,
     request_date_ms:       nowMs,
@@ -88,7 +81,5 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
     }
   };
 
-  $done({
-    body: JSON.stringify(fake)
-  });
+  $done({ body: JSON.stringify(fake) });
 }
