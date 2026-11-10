@@ -1,8 +1,7 @@
 /*
 [rewrite_local]
-[rewrite_local]
-^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyh.js
-^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyh.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneya.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneya.js
 
 [MITM]
 hostname = api.revenuecat.com, api.rc-backup.com
@@ -23,11 +22,9 @@ if (typeof $response === "undefined") {
 
   const u = $request.url || "";
   const [base, qs] = u.split("?");
-  if (/\/v1\/subscribers\/?$/.test(base)) {
-    $request.url = base.replace(/\/v1\/subscribers\/?$/, `/v1/subscribers/${DEFAULT_APP_USER_ID}`) + (qs ? "?" + qs : "");
-    console.log("[RC][REQ] 补 id →", $request.url);
-  }
-  $done({ headers: $request.headers, url: $request.url });
+  // 请求头阶段不修改 URL,避免 QX 重建连接失败
+  console.log("[RC][REQ] url =", u);
+  $done({ headers: $request.headers });
   return;
 }
 
@@ -35,18 +32,18 @@ if (typeof $response === "undefined") {
 const url = ($request.url || "").split("?")[0];
 console.log("[RC][RESP] url =", url);
 
-// 时间: 秒对齐 + 无毫秒后缀
-const nowMs  = Math.floor(Date.now() / 1000) * 1000;
-const nowIso = new Date(nowMs).toISOString().replace(/\.\d{3}Z$/, "Z");
+// ★ 修复 1:request_date_ms 用"秒级整数,避免 int32 越界"
+const nowSec  = Math.floor(Date.now() / 1000);        // 秒级整数,不会越界
+const nowMs   = nowSec * 1000;
+const nowIso  = new Date(nowMs).toISOString().replace(/\.\d{3}Z$/, "Z");
 
-// 从 URL 提取 id;若为 /subscribers/ 则用 DEFAULT
 let appUserId = DEFAULT_APP_USER_ID;
 try {
   const m = url.match(/\/v1\/subscribers\/([^\/?]+)(?=\/|$)/);
   if (m && m[1] && m[1] !== "") appUserId = m[1];
 } catch (e) {}
 
-// -------- /receipts 分支:直接返回 200 空(不伪造会员,避免 query)------
+// -------- /receipts --------
 if (/\/receipts$/.test(url)) {
   console.log("[RC][RESP] receipts 分支");
   $done({
@@ -57,7 +54,7 @@ if (/\/receipts$/.test(url)) {
   return;
 }
 
-// -------- /offerings 分支 --------
+// -------- /offerings --------
 if (/\/offerings$/.test(url)) {
   const offerBody = {
     request_date:    nowIso,
@@ -101,17 +98,14 @@ if (/\/v1\/me$/.test(url)) {
   return;
 }
 
-// -------- /subscribers 分支(200 或 404 都返回伪造订阅)--------
+// -------- /subscribers --------
 let originObj = null;
 try { originObj = JSON.parse($response.body || "null"); } catch (e) { originObj = null; }
 
-const baseFake = Array.isArray(originObj) ? {} : (originObj || {});
+const baseFake = (originObj && typeof originObj === "object" && !Array.isArray(originObj)) ? originObj : {};
 
-// 保证 request_date / request_date_ms 一致
-// 若原响应里有合法时间(200 情况),继承它们;否则用 nowIso/nowMs
-const reqDate       = (typeof baseFake.request_date === "string" && baseFake.request_date) || nowIso;
-const reqDateMs     = (baseFake.request_date_ms && Number(baseFake.request_date_ms)) || nowMs;
-const lastSeen      = (typeof baseFake.last_seen_app_user_id === "string" && baseFake.request_date) || reqDate;
+const reqDate   = (typeof baseFake.request_date === "string" && baseFake.request_date) || nowIso;
+const reqDateMs = (typeof baseFake.request_date_ms === "number" && baseFake.request_date_ms) || nowMs;
 
 const fake = {
   request_date:          reqDate,
@@ -149,7 +143,8 @@ const fake = {
   }
 };
 
-console.log("[RC][RESP] subscriber 分支,伪造);
+// ★ 修复 2:此 console.log 之前有一个缺引号的 bug
+console.log("[RC][RESP] subscriber 分支,伪造");
 $done({
   status:  200,
   body:    JSON.stringify(fake),
