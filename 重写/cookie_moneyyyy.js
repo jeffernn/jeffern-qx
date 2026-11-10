@@ -1,63 +1,75 @@
 /*
-
-Cookie记账：https://apps.apple.com/app/id1559943673
-
 [rewrite_local]
-^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyy.js
-^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/$ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyy.js
+^https:\/\/api\.revenuecat\.com\/v1\/subscribers(\/.*)?$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyy.js
+^https:\/\/api\.revenuecat\.com\/v1\/subscribers(\/.*)?$ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyy.js
 
 [MITM]
 hostname = api.revenuecat.com
-
 */
-const guding = {};
-let guding6 = null;
 
-if (typeof $response !== "undefined" && $response.body) {
-  try {
-    guding6 = JSON.parse($response.body);
-  } catch (e) {
-    console.log("[Cookie] JSON解析失败:", String(e));
-  }
-}
-if (typeof $response == "undefined") {
+// ========== 请求头阶段 ==========
+if (typeof $response === "undefined") {
   delete $request.headers["x-revenuecat-etag"];
   delete $request.headers["X-RevenueCat-ETag"];
-  guding.headers = $request.headers;
-} else if (guding6 && guding6.subscriber) {
-  guding6.subscriber.subscriptions = guding6.subscriber.subscriptions || {};
-  guding6.subscriber.entitlements = guding6.subscriber.entitlements || {};
-  var headers = {};
-  for (var key in $request.headers) {
-  const reg = /^[a-z]+$/;
-  if (key === "User-Agent" && !reg.test(key)) {
-    var lowerkey = key.toLowerCase();
-    $request.headers[lowerkey] = $request.headers[key];
-    delete $request.headers[key];
+
+  for (const key in $request.headers) {
+    const lower = key.toLowerCase();
+    if (lower !== key) {
+      $request.headers[lower] = $request.headers[key];
+      delete $request.headers[key];
     }
   }
-  var UA = $request.headers['user-agent'];
-  const app = 'gd';
-  const UAMappings = {
-    'Cookie':{ name: 'allaccess', id: 'app.ft.Bookkeeping.lifetime'},
-  };
-  const data = {
-    "expires_date": "6666-06-06T06:06:06Z",
-    "original_purchase_date": "2023-02-23T02:33:33Z",
-    "purchase_date": "2023-02-23T02:33:33Z",
-    "ownership_type": "PURCHASED",
-    "store": "app_store"
-  };
-  for (const i in UAMappings) {
-    if (new RegExp(`^${i}`, 'i').test(UA)) {
-      const { name, id } = UAMappings[i];
-      guding6.subscriber.subscriptions = {};
-      guding6.subscriber.subscriptions[id] = data;
-      guding6.subscriber.entitlements[name] = JSON.parse(JSON.stringify(data));
-      guding6.subscriber.entitlements[name].product_identifier = id;
-      break;
-    }
-  }
-  guding.body = JSON.stringify(guding6);
+
+  $done({ headers: $request.headers });
+  return;
 }
-$done(guding);
+
+// ========== 响应体阶段:无条件伪造 ==========
+const FAKE_DATA = {
+  expires_date:           "6666-06-06T06:06:06Z",
+  original_purchase_date: "2023-02-23T02:33:33Z",
+  purchase_date:          "2023-02-23T02:33:33Z",
+  ownership_type:         "PURCHASED",
+  store:                  "app_store"
+};
+
+const body = {};
+
+// 尝试继承原响应外层字段,让结构更真实
+try {
+  const origin = JSON.parse($response.body || "null");
+  if (origin && typeof origin === "object") {
+    body.request_date          = origin.request_date || new Date().toISOString();
+    body.original_app_user_id  = origin.original_app_user_id || "fake";
+    body.last_seen_app_user_id = origin.last_seen_app_user_id || body.original_app_user_id;
+  } else {
+    body.request_date          = new Date().toISOString();
+    body.original_app_user_id  = "fake";
+    body.last_seen_app_user_id = "fake";
+  }
+} catch (e) {
+  body.request_date          = new Date().toISOString();
+  body.original_app_user_id  = "fake";
+  body.last_seen_app_user_id = "fake";
+}
+
+// 直接沿用原脚本写死的键名:allaccess + app.ft.Bookkeeping.lifetime
+body.subscriber = {
+  entitlements: {
+    allaccess: {
+      ...FAKE_DATA,
+      product_identifier: "app.ft.Bookkeeping.lifetime"
+    }
+  },
+  subscriptions: {
+    "app.ft.Bookkeeping.lifetime": { ...FAKE_DATA }
+  },
+  original_purchase_date: FAKE_DATA.original_purchase_date,
+  other_purchases:        {},
+  non_subscriptions:      {},
+  management_url:         null,
+  first_seen:             FAKE_DATA.original_purchase_date,
+  last_seen:              new Date().toISOString()
+};
+
+$done({ body: JSON.stringify(body) });
