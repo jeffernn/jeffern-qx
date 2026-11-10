@@ -1,7 +1,7 @@
 /*
 [rewrite_local]
-^https:\/\/api\.revenuecat\.com\/v1\/subscribers(\/.*)?$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyys.js
-^https:\/\/api\.revenuecat\.com\/v1\/subscribers(\/.*)?$ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyys.js
+^https:\/\/api\.revenuecat\.com\/v1\/subscribers(\/.*)?$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyyss.js
+^https:\/\/api\.revenuecat\.com\/v1\/subscribers(\/.*)?$ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyyss.js
 
 [MITM]
 hostname = api.revenuecat.com
