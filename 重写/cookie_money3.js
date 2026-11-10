@@ -1,7 +1,7 @@
 /*
 [rewrite_local]
-^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money2.js
-^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money2.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money3.js
+^https:\/\/api\.(revenuecat|rc-backup)\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_money3.js
 
 [MITM]
 hostname = api.revenuecat.com, api.rc-backup.com
@@ -10,9 +10,10 @@ hostname = api.revenuecat.com, api.rc-backup.com
 const DEFAULT_APP_USER_ID = "_9eb8b5aa4f4d27e7d049e5c0bee5616b";
 const PRODUCT_ID          = "app.ft.Bookkeeping.lifetime";
 const ENTITLEMENT_NAME    = "allaccess";
+const APP_STORE_MGMT_URL  = "https://apps.apple.com/account/subscriptions";
 
-// ★ 关键修复 1:expires_date 从 6666 改 2099,避免 SDK 日期解析失败
-const EXPIRES_DATE = "2099-06-06T06:06:06Z";
+// lifetime 商品:expires_date 用 null
+const EXPIRES_DATE = null;
 
 // ================= 请求头阶段 =================
 if (typeof $response === "undefined" || Object.keys($response).length === 0) {
@@ -33,8 +34,9 @@ if (typeof $response === "undefined" || Object.keys($response).length === 0) {
 const url = ($request.url || "").split("?")[0];
 console.log("[RC][RESP] url =", url);
 
-const nowMs  = Date.now();
-const nowIso = new Date(nowMs).toISOString();
+// 时间戳:秒对齐 + 去 .302Z 毫秒后缀(部分 ISO8601 解析器会 fail)
+const nowMs  = Math.floor(Date.now() / 1000) * 1000;
+const nowIso = new Date(nowMs).toISOString().replace(/\.\d{3}Z$/, "Z");
 
 const data = {
   expires_date:           EXPIRES_DATE,
@@ -87,8 +89,8 @@ if (/\/v1\/me$/.test(url)) {
   return;
 }
 
-// -------- /subscribers 分支:伪造已订阅 --------
-let appUserId = DEFAULT_APP_USER_ID;   // ★ 强制使用真实 id
+// -------- /subscribers 分支 --------
+const appUserId = DEFAULT_APP_USER_ID;
 
 const fake = {
   request_date:          nowIso,
@@ -98,9 +100,9 @@ const fake = {
   subscriber: {
     original_app_user_id:     appUserId,
     original_purchase_date:   data.original_purchase_date,
-    first_seen:               data.original_purchase_date,
+    first_seen:               "2023-02-23T02:33:35Z",    // ★ 比 purchase_date 晚 2 秒,避免 first_seen <= purchase 严格校验失败
     last_seen:                nowIso,
-    management_url:           null,
+    management_url:           APP_STORE_MGMT_URL,        // ★ null → 真商店管理链接
     original_application_version: "1.0",
     entitlements: {
       [ENTITLEMENT_NAME]: {
