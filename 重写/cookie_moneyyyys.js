@@ -7,6 +7,9 @@
 hostname = api.revenuecat.com
 */
 
+// 兜底 id:当 URL 里没有 app_user_id 时,用它补到 /v1/subscribers/ 后面
+const DEFAULT_APP_USER_ID = "_9eb8b5aa4f4d27e7d049e5c0bee5616b";
+
 // ========== 请求头阶段 ==========
 if (typeof $response === "undefined") {
   delete $request.headers["x-revenuecat-etag"];
@@ -18,6 +21,17 @@ if (typeof $response === "undefined") {
       $request.headers[lower] = $request.headers[key];
       delete $request.headers[key];
     }
+  }
+
+  // ★ 关键:URL 里没有 app_user_id 时,强制补上
+  let url = ($request.url || "").split("?")[0];
+  const idMatch = url.match(/\/v1\/subscribers\/([^\/]+)/);
+  if (!idMatch && /\/v1\/subscribers\/?$/.test(url)) {
+    $request.url = url.replace(
+      /\/v1\/subscribers\/?$/,
+      `/v1/subscribers/${DEFAULT_APP_USER_ID}`
+    );
+    console.log("[RC] 请求头阶段已补 id:", $request.url);
   }
 
   $done({ headers: $request.headers });
@@ -35,25 +49,39 @@ const FAKE_DATA = {
 
 const body = {};
 
-// 尝试继承原响应外层字段,让结构更真实
+// 解析原响应,继承外层字段,同时把 app_user_id 尽量捞出来
+let appUserId = DEFAULT_APP_USER_ID;
 try {
   const origin = JSON.parse($response.body || "null");
   if (origin && typeof origin === "object") {
     body.request_date          = origin.request_date || new Date().toISOString();
-    body.original_app_user_id  = origin.original_app_user_id || "fake";
+    body.original_app_user_id  = origin.original_app_user_id || appUserId;
     body.last_seen_app_user_id = origin.last_seen_app_user_id || body.original_app_user_id;
+    appUserId = origin.original_app_user_id || appUserId;
   } else {
     body.request_date          = new Date().toISOString();
-    body.original_app_user_id  = "fake";
-    body.last_seen_app_user_id = "fake";
+    body.original_app_user_id  = appUserId;
+    body.last_seen_app_user_id = appUserId;
   }
 } catch (e) {
   body.request_date          = new Date().toISOString();
-  body.original_app_user_id  = "fake";
-  body.last_seen_app_user_id = "fake";
+  body.original_app_user_id  = appUserId;
+  body.last_seen_app_user_id = appUserId;
 }
 
-// 直接沿用原脚本写死的键名:allaccess + app.ft.Bookkeeping.lifetime
+// ★ 关键:响应阶段也从 URL 补 id(有的 App 后续逻辑会读请求 URL)
+let respUrl = ($request.url || "").split("?")[0];
+const idMatch2 = respUrl.match(/\/v1\/subscribers\/([^\/]+)/);
+if (idMatch2 && idMatch2[1]) appUserId = idMatch2[1];
+else if (/\/v1\/subscribers\/?$/.test(respUrl)) {
+  $request.url = respUrl.replace(
+    /\/v1\/subscribers\/?$/,
+    `/v1/subscribers/${appUserId}`
+  );
+  console.log("[RC] 响应体阶段已补 id:", $request.url);
+}
+
+// 沿用原脚本写死的键名:allaccess + app.ft.Bookkeeping.lifetime
 body.subscriber = {
   entitlements: {
     allaccess: {
