@@ -1,25 +1,23 @@
 /*
 [rewrite_local]
-^https:\/\/api\.revenuecat\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneypp.js
-^https:\/\/api\.revenuecat\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneypp.js
+^https:\/\/api\.revenuecat\.com\/v1\/ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyppp.js
+^https:\/\/api\.revenuecat\.com\/v1\/ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyppp.js
 
 [MITM]
 hostname = api.revenuecat.com
 */
 
-const guding = {};
-const now = new Date().toISOString();
-
 // ===== 请求头阶段 =====
 if (typeof $response === "undefined") {
   delete $request.headers["x-revenuecat-etag"];
   delete $request.headers["X-RevenueCat-ETag"];
-  guding.headers = $request.headers;
-  $done(guding);
-  return;
+  $done({ headers: $request.headers });
+  return;    // ← 提前 return,防止后面的响应体代码再跑
 }
 
-// ===== 响应体阶段:无条件替换,不看原响应 =====
+// ===== 响应体阶段:无条件替换 =====
+const now = new Date().toISOString();
+
 const data = {
   expires_date:           "6666-06-06T06:06:06Z",
   original_purchase_date: "2023-02-23T02:33:33Z",
@@ -28,7 +26,7 @@ const data = {
   store:                  "app_store"
 };
 
-// 尝试从原响应里捞外层字段(能捞就捞,捞不到就用默认值)
+// 尝试从原响应捞字段
 let appUserId = "fake";
 let requestDate = now;
 try {
@@ -39,15 +37,13 @@ try {
                   origin.last_seen_app_user_id ||
                   "fake";
   }
-} catch (e) {
-  // 原响应非 JSON(比如 404 文本),忽略,继续用默认值
-}
+} catch (e) { /* 忽略 */ }
 
-// ★ 无论是 200 还是 404,统一返回这个"已订阅"结构
-const guding6 = {
-  request_date: requestDate,
-  request_date_ms: Date.now(),
-  original_app_user_id: appUserId,
+// 构造伪造的"已订阅"结构
+const body = {
+  request_date:          requestDate,
+  request_date_ms:       Date.now(),
+  original_app_user_id:  appUserId,
   last_seen_app_user_id: appUserId,
   subscriber: {
     original_app_user_id:    appUserId,
@@ -57,14 +53,12 @@ const guding6 = {
     management_url:          null,
     original_application_version: "1.0",
     entitlements: {
-      // allaccess entitlement
       allaccess: {
         ...data,
         product_identifier: "app.ft.Bookkeeping.lifetime"
       }
     },
     subscriptions: {
-      // 产品 id
       "app.ft.Bookkeeping.lifetime": { ...data }
     },
     other_purchases:   {},
@@ -72,5 +66,5 @@ const guding6 = {
   }
 };
 
-guding.body = JSON.stringify(guding6);
-$done(guding);
+// ★ 关键:直接用 $done 返回字符串,不用对象挂载
+$done({ body: JSON.stringify(body) });
