@@ -3,15 +3,23 @@
 Cookie记账：https://apps.apple.com/app/id1559943673
 
 [rewrite_local]
-^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyy.js
-^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/$ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyy.js
+^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/$ url script-response-body https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyy.js
+^https:\/\/api\.revenuecat\.com\/v1\/subscribers\/$ url script-request-header https://raw.githubusercontent.com/jeffernn/jeffern-qx/refs/heads/main/%E9%87%8D%E5%86%99/cookie_moneyyyy.js
 
 [MITM]
 hostname = api.revenuecat.com
 
 */
 const guding = {};
-const guding6 = JSON.parse(typeof $response != "undefined" && $response.body || null);
+let guding6 = null;
+
+if (typeof $response !== "undefined" && $response.body) {
+  try {
+    guding6 = JSON.parse($response.body);
+  } catch (e) {
+    console.log("[Cookie] JSON解析失败:", String(e));
+  }
+}
 if (typeof $response == "undefined") {
   delete $request.headers["x-revenuecat-etag"];
   delete $request.headers["X-RevenueCat-ETag"];
